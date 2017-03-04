@@ -1,14 +1,10 @@
 ---
-title: API Reference
+title: Boostcom Loyalty API Reference
 
 language_tabs:
   - shell
-  - ruby
-  - python
-  - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
@@ -19,121 +15,139 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+It's an API to manage loyalty club's members. It can be accessed from both Boostcom's internal server applications as well as from native mobile applications as well as external client's server applications.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+# Global settings
 
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+## Host
 
-# Authentication
+API host is https://connect.bstcm.no/
 
-> To authorize, use this code:
+## Content-Type
 
-```ruby
-require 'kittn'
+This API supports `application/json` only. 
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
+Both payload and response body are supposed to be a valid JSON so when making a request send a `Content-Type: application/json` header.
 
-```python
-import kittn
+If payload is not a valid JSON, then `406 Not Acceptable` HTTP code and empty response body are returned.
 
-api = kittn.authorize('meowmeowmeow')
-```
+## Authentication
 
-```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
-```
+All of the endpoints require a single authentication header.
 
-```javascript
-const kittn = require('kittn');
+* `X-Member-Token` represents SMS pass code sent to the member and allows to manage his own profile only. To trigger that SMS use `/send_token` call.
+* `X-Customer-Public-Token` is used for endpoints that are not sensitive (not destructive and do not leak any personal data). Currently:
+    + Get schema
+    + Send token
+    + Check if member exists
+* `X-Customer-Private-Token` can be used for batch operations on any member of the customer's loyalty club. It could be used for all operations that allow authentication with `X-Customer-Public-Token`. It should be used only on backend and never exposed in frontend code.
 
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+If you miss your authentication tokens, please [let us know](http://boostcom.no).
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must use only one header in each request.
 </aside>
 
-# Kittens
+## Product name
 
-## Get All Kittens
+Each system that is communicating with us should uniqly identify itself so it is possible to distinguish optin/update channels. That will allow further targeting members by communication channel. For that we use product name and header `X-Product-Name` is intended to provide the necessary granularity.
 
-```ruby
-require 'kittn'
+If you miss your product name, please [let us know](http://boostcom.no).
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
+<aside class="warning">
+Product Name header is required in each request!
+<br>
+When it is missing or it has incorrect value, then <code>401 Unauthorized</code> HTTP code and empty response body are returned.
+</aside>
 
-```python
-import kittn
+## Msisdn - member identifier
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+Members in our systems are identified with their phone numbers (msisdns) according to [E.164](https://en.wikipedia.org/wiki/E.164) We use format without leading `00` or `+` and without spaces, so that it contains only digits, i.e. `4740485124`.
+
+There is no special handling in case it has wrong format, except for creating a member and sending a token. `404 Not Found` is returned and empty response body unless stated otherwise.
+
+## Registration options
+
+New members could be created with or without password confirmation depending on which token is being used on *Create member* action.
+
+*Send token* action will trigger sending member token/password to provided msisdn no matter whether msisdn is already a member or not.
+
+# Api V1 reference
+
+## Notice
+
+Api V1 endpoints that are in Api V2 will be soon deprecated. It will always work, but it's not advised to use it.
+
+Main goal of Api V2 is to support internationalized member properties.
+
+You can use Api V2 only when your schema is ready to support it (*coming soon*).
+
+## Schema
 
 ```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
+curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema"
+  -H "X-Customer-Public-Token: alphanumeric_string"
+  -H "X-Product-Name: custom-product-name"
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "first_name": {
+      "title": "Fornavn",
+      "type": "string"
+    },
+    "last_name": {
+      "title": "Etternavn",
+      "type": "string"
+    },
+    "birthday": {
+      "title": "Fødselsdato",
+      "type": "string",
+      "format": "date"
+    },
+    "interests": {
+      "title": "Interesser",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "bikes & cars",
+          "sportwear"
+        ]
+      }
+    }
   },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+  "required": [
+    "first_name",
+    "last_name",
+    "birthday"
+  ]
+}
 ```
 
-This endpoint retrieves all kittens.
+Properties for members are defined as part of the loyalty club they belong to.
+To describe member properties we use [JSON Schema](http://json-schema.org/documentation.html) definition.
+Properties of each member must conform to the defined schema.
+We support **JSON schema Draft V4** with format extension for `date` (YYYY-MM-DD).
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`GET https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema`
 
-### Query Parameters
+Parameter | Description
+--------- | -------
+:loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+<aside class="notice">
+Authentication only with <code>X-Customer-Public-Token</code>.
 </aside>
 
-## Get a Specific Kitten
+## Member tokens
 
 ```ruby
 require 'kittn'
@@ -173,17 +187,22 @@ let max = api.kittens.get(2);
 }
 ```
 
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+**Member tokens** are used to authenticate actions on particular members.
+**Member token** could be issued even before registering enduser as a member in community.
+In that case we create temporary token that is valid till end of day.
+That **member token** could be used to authenticate *Create Member* action described below.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`POST https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to retrieve
+:loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
+:msisdn | unique member's msisdn as defined by E.164 (described above) Example: `4740485124`.
 
+<aside class="notice">
+Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Private-Token</code>.
+</aside>

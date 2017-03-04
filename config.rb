@@ -1,3 +1,4 @@
+activate :livereload
 # Markdown
 set :markdown_engine, :redcarpet
 set :markdown,
