@@ -14,7 +14,7 @@ curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_sc
   -H "X-Product-Name: custom-product-name"
 ```
 
-> The above command returns JSON structured like this:
+> When successful, the above command returns JSON structured like this:
 
 ```json
 {
@@ -63,7 +63,7 @@ If loyalty club's schema is in v2, schema will be mapped to keep old behaviour (
 
 ### HTTP Request
 
-`GET https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema`
+**GET** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema`
 
 Parameter | Description
 --------- | -------
@@ -88,7 +88,7 @@ If msisdn is not valid, then `400 Bad Request` is returned.
 
 ### HTTP Request
 
-`POST https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token`
+**POST** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token`
 
 ### URL Parameters
 
@@ -103,11 +103,19 @@ Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Pri
 
 ## Check if member exists
 
+```shell
+curl -I "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"
+  -H "X-Customer-Public-Token: alphanumeric_string"
+  -H "X-Product-Name: custom-product-name"
+```
+
+> Response will be 200 or 404 code.
+
 It can be used to check if member is in loyalty club or not.
 
 ### HTTP Request
 
-`HEAD https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**HEAD** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -127,24 +135,13 @@ Authentication with <code>X-Customer-Public-Token</code>.
 
 ## Get member
 
-Fetches member's properties.
+```shell
+curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"
+  -H "X-Customer-Private-Token: alphanumeric_string"
+  -H "X-Product-Name: custom-product-name"
+```
 
-If loyalty club's schema is in v2, some of properties will be mapped to keep old behaviour.
-
-### HTTP Request
-
-`GET https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
-msisdn | unique member's msisdn as defined by E.164 (described above) Example: `4740485124`.
-
-### Responses
-
-* **200** - success with member's properties in response body
+> When successful, the above command returns JSON structured like this:
 
 ```json
 {
@@ -165,6 +162,24 @@ msisdn | unique member's msisdn as defined by E.164 (described above) Example: `
 }
 ```
 
+Fetches member's properties.
+
+If loyalty club's schema is in v2, some of properties will be mapped to keep old behaviour.
+
+### HTTP Request
+
+**GET** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
+msisdn | unique member's msisdn as defined by E.164 (described above) Example: `4740485124`.
+
+### Responses
+
+* **200** - success with member's properties in response body
 * **404 Not found** - member with `msisdn` not found or it is invalid
 
 <aside class="notice">
@@ -181,7 +196,7 @@ If loyalty club's schema is in v2, some of properties will be mapped to keep old
 
 ### HTTP Request
 
-`PUT https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**PUT** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -218,7 +233,7 @@ If loyalty club's schema is in v2, some of properties will be mapped to keep old
 
 ### HTTP Request
 
-`PATCH https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**PATCH** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -251,7 +266,7 @@ It is possible to trigger optout message by setting `send_unsubscribe_message=tr
 
 ### HTTP Request
 
-`DELETE https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**DELETE** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
