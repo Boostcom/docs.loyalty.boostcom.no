@@ -200,7 +200,7 @@
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;]">
+  <body class="index" data-languages="[]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -208,10 +208,7 @@
       </span>
     </a>
     <div class="tocify-wrapper">
-      <img src="images/logo.png" alt="Logo" />
-        <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-        </div>
+      <img src="images/logo.svg" alt="Logo" />
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
         </div>
@@ -219,7 +216,7 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='http://boostcom.no/'>Boostcom</a></li>
+            <li><a href='http://boostcom.com/'>Boostcom</a></li>
             <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
         </ul>
     </div>
@@ -306,8 +303,8 @@ We use format without leading <code class="prettyprint">00</code> or <code class
 <p>You can use Api V2 only when your schema is ready to support it (<em>coming soon</em>).</p>
 
 <h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema"</span>
-  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
 </code></pre>
 <blockquote>
@@ -358,7 +355,7 @@ We support <strong>JSON schema Draft V4</strong> with format extension for <code
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>GET</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/member_schema</code></p>
 
 <table><thead>
 <tr>
@@ -391,7 +388,7 @@ That <strong>member token</strong> could be used to authenticate <em>Create Memb
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>POST</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token</code></p>
+<p><strong>POST</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -416,8 +413,8 @@ Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Pri
 </aside>
 
 <h2 id="check-if-member-exists">Check if member exists</h2>
-<pre class="highlight shell tab-shell"><code>curl -I <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span>
-  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span>
+<pre class="highlight shell tab-shell"><code>curl -I <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
 </code></pre>
 <blockquote>
@@ -428,7 +425,7 @@ Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Pri
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>HEAD</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>HEAD</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -460,8 +457,8 @@ Authentication with <code>X-Customer-Public-Token</code>.
 </aside>
 
 <h2 id="get-member">Get member</h2>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span>
-  -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span> <span class="se">\</span>
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
 </code></pre>
 <blockquote>
@@ -490,7 +487,7 @@ Authentication with <code>X-Customer-Public-Token</code>.
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>GET</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -531,7 +528,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>PUT</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>PUT</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -599,7 +596,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>PATCH</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>PATCH</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -654,7 +651,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>DELETE</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>DELETE</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -708,8 +705,8 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 <p>Please don&rsquo;t use it before contacting with us.</p>
 
 <h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema"</span>
-  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
 </code></pre>
 <blockquote>
@@ -765,7 +762,7 @@ We support <strong>JSON schema Draft V4</strong> with format extension for <code
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>GET</strong> <code class="prettyprint">https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/member_schema</code></p>
 
 <table><thead>
 <tr>
@@ -784,8 +781,8 @@ Authentication only with <code>X-Customer-Public-Token</code>.
 </aside>
 
 <h2 id="check-if-member-exists">Check if member exists</h2>
-<pre class="highlight shell tab-shell"><code>curl -I <span class="s2">"https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span>
-  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span>
+<pre class="highlight shell tab-shell"><code>curl -I <span class="s2">"https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
 </code></pre>
 <blockquote>
@@ -796,7 +793,7 @@ Authentication only with <code>X-Customer-Public-Token</code>.
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>HEAD</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>HEAD</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -828,8 +825,8 @@ Authentication with <code>X-Customer-Public-Token</code>.
 </aside>
 
 <h2 id="get-member">Get member</h2>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span>
-  -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span> <span class="se">\</span>
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
 </code></pre>
 <blockquote>
@@ -856,7 +853,7 @@ Authentication with <code>X-Customer-Public-Token</code>.
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>GET</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -895,7 +892,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>PUT</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>PUT</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -961,7 +958,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>PATCH</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>PATCH</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -1016,7 +1013,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>DELETE</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>DELETE</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -1065,9 +1062,6 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
       </div>
       <div class="dark-box">
-          <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-          </div>
       </div>
     </div>
   </body>
