@@ -9,8 +9,8 @@ You can use Api V2 only when your schema is ready to support it (*coming soon*).
 ## Get loyalty club's schema
 
 ```shell
-curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema"
-  -H "X-Customer-Public-Token: alphanumeric_string"
+curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema" \
+  -H "X-Customer-Public-Token: alphanumeric_string" \
   -H "X-Product-Name: custom-product-name"
 ```
 
@@ -63,7 +63,7 @@ If loyalty club's schema is in v2, schema will be mapped to keep old behaviour (
 
 ### HTTP Request
 
-**GET** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema`
+**GET** `api/v1/loyalty_clubs/:loyalty_club_slug/member_schema`
 
 Parameter | Description
 --------- | -------
@@ -88,7 +88,7 @@ If msisdn is not valid, then `400 Bad Request` is returned.
 
 ### HTTP Request
 
-**POST** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token`
+**POST** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token`
 
 ### URL Parameters
 
@@ -104,8 +104,8 @@ Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Pri
 ## Check if member exists
 
 ```shell
-curl -I "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"
-  -H "X-Customer-Public-Token: alphanumeric_string"
+curl -I "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn" \
+  -H "X-Customer-Public-Token: alphanumeric_string" \
   -H "X-Product-Name: custom-product-name"
 ```
 
@@ -115,7 +115,7 @@ It can be used to check if member is in loyalty club or not.
 
 ### HTTP Request
 
-**HEAD** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**HEAD** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -136,8 +136,8 @@ Authentication with <code>X-Customer-Public-Token</code>.
 ## Get member
 
 ```shell
-curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"
-  -H "X-Customer-Private-Token: alphanumeric_string"
+curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn" \
+  -H "X-Customer-Private-Token: alphanumeric_string" \
   -H "X-Product-Name: custom-product-name"
 ```
 
@@ -168,7 +168,7 @@ If loyalty club's schema is in v2, some of properties will be mapped to keep old
 
 ### HTTP Request
 
-**GET** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**GET** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -196,7 +196,7 @@ If loyalty club's schema is in v2, some of properties will be mapped to keep old
 
 ### HTTP Request
 
-**PUT** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**PUT** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -233,7 +233,7 @@ If loyalty club's schema is in v2, some of properties will be mapped to keep old
 
 ### HTTP Request
 
-**PATCH** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**PATCH** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -266,7 +266,7 @@ It is possible to trigger optout message by setting `send_unsubscribe_message=tr
 
 ### HTTP Request
 
-**DELETE** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**DELETE** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 

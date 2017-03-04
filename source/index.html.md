@@ -1,11 +1,8 @@
 ---
 title: Boostcom Loyalty API Reference
 
-language_tabs:
-  - shell
-
 toc_footers:
-  - <a href='http://boostcom.no/'>Boostcom</a>
+  - <a href='http://boostcom.com/'>Boostcom</a>
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:

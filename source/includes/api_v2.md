@@ -7,8 +7,8 @@ Please don't use it before contacting with us.
 ## Get loyalty club's schema
 
 ```shell
-curl "https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema"
-  -H "X-Customer-Public-Token: alphanumeric_string"
+curl "https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema" \
+  -H "X-Customer-Public-Token: alphanumeric_string" \
   -H "X-Product-Name: custom-product-name"
 ```
 
@@ -64,7 +64,7 @@ Keys explanation:
 
 ### HTTP Request
 
-**GET** `https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema`
+**GET** `api/v2/loyalty_clubs/:loyalty_club_slug/member_schema`
 
 Parameter | Description
 --------- | -------
@@ -77,8 +77,8 @@ Authentication only with <code>X-Customer-Public-Token</code>.
 ## Check if member exists
 
 ```shell
-curl -I "https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn"
-  -H "X-Customer-Public-Token: alphanumeric_string"
+curl -I "https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn" \
+  -H "X-Customer-Public-Token: alphanumeric_string" \
   -H "X-Product-Name: custom-product-name"
 ```
 
@@ -88,7 +88,7 @@ It can be used to check if member is in loyalty club or not.
 
 ### HTTP Request
 
-**HEAD** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**HEAD** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -109,8 +109,8 @@ Authentication with <code>X-Customer-Public-Token</code>.
 ## Get member
 
 ```shell
-curl "https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn"
-  -H "X-Customer-Private-Token: alphanumeric_string"
+curl "https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn" \
+  -H "X-Customer-Private-Token: alphanumeric_string" \
   -H "X-Product-Name: custom-product-name"
 ```
 
@@ -139,7 +139,7 @@ Fetches member's properties.
 
 ### HTTP Request
 
-**GET** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**GET** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -165,7 +165,7 @@ When invalid authentication token is provided response `401 Unauthorized` is ret
 
 ### HTTP Request
 
-**PUT** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**PUT** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -200,7 +200,7 @@ It is intended for partial updates - not given properties are neither deleted no
 
 ### HTTP Request
 
-**PATCH** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**PATCH** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -233,7 +233,7 @@ It is possible to trigger optout message by setting `send_unsubscribe_message=tr
 
 ### HTTP Request
 
-**DELETE** `https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**DELETE** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
