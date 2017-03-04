@@ -12,7 +12,7 @@
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
 </code></pre>
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>When successful, the above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://json-schema.org/draft-04/schema#"</span><span class="p">,</span><span class="w">
@@ -59,7 +59,7 @@ We support <strong>JSON schema Draft V4</strong> with format extension for <code
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">GET https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema</code></p>
+<p><strong>GET</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema</code></p>
 
 <table><thead>
 <tr>
@@ -92,7 +92,7 @@ That <strong>member token</strong> could be used to authenticate <em>Create Memb
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">POST https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token</code></p>
+<p><strong>POST</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -117,12 +117,19 @@ Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Pri
 </aside>
 
 <h2 id="check-if-member-exists">Check if member exists</h2>
+<pre class="highlight shell tab-shell"><code>curl -I <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span>
+  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span>
+  -H <span class="s2">"X-Product-Name: custom-product-name"</span>
+</code></pre>
+<blockquote>
+<p>Response will be 200 or 404 code.</p>
+</blockquote>
 
 <p>It can be used to check if member is in loyalty club or not.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">HEAD https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>HEAD</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -154,14 +161,37 @@ Authentication with <code>X-Customer-Public-Token</code>.
 </aside>
 
 <h2 id="get-member">Get member</h2>
-
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span>
+  -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span>
+  -H <span class="s2">"X-Product-Name: custom-product-name"</span>
+</code></pre>
+<blockquote>
+<p>When successful, the above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ola"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nordmann"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"birthday"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1990-10-23"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"bikes &amp; cars"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"sportwear"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"child_birth_years"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">2010</span><span class="p">,</span><span class="w">
+      </span><span class="mi">2011</span><span class="p">,</span><span class="w">
+      </span><span class="mi">2011</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <p>Fetches member&rsquo;s properties.</p>
 
 <p>If loyalty club&rsquo;s schema is in v2, some of properties will be mapped to keep old behaviour.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">GET https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>GET</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -185,25 +215,6 @@ Authentication with <code>X-Customer-Public-Token</code>.
 
 <ul>
 <li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
-</ul>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ola"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nordmann"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"birthday"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1990-10-23"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="s2">"bikes &amp; cars"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"sportwear"</span><span class="w">
-    </span><span class="p">],</span><span class="w">
-    </span><span class="s2">"child_birth_years"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-      </span><span class="mi">2010</span><span class="p">,</span><span class="w">
-      </span><span class="mi">2011</span><span class="p">,</span><span class="w">
-      </span><span class="mi">2011</span><span class="w">
-    </span><span class="p">]</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<ul>
 <li><strong>404 Not found</strong> - member with <code class="prettyprint">msisdn</code> not found or it is invalid</li>
 </ul>
 
@@ -221,7 +232,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">PUT https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>PUT</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -289,7 +300,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">PATCH https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>PATCH</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -344,7 +355,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">DELETE https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>DELETE</strong> <code class="prettyprint">https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
