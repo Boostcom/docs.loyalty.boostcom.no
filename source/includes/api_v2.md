@@ -1,8 +1,8 @@
-# Api V2 reference (experimental)
+# Api V2 reference
 
-You can use Api V2 fully, only when your schema is ready to support it (*coming soon*).
+You can use Api V2 fully, only when your schema is ready to support it.
 
-Please don't use it before contacting with us.
+All new customers should have schema v2.
 
 ## Get loyalty club's schema
 
@@ -59,7 +59,7 @@ We support **JSON schema Draft V4** with format extension for `date` (YYYY-MM-DD
 Keys explanation:
 
 * `languages` - array of languages set up in loyalty club
-* `default_language` - default language used in loyalty club and also used for mappings to Api V1
+* `default_language` - default language used in loyalty club and also used for mappings to Api v2
 * `version` - version of schema, currently the newest is `v2`
 
 ### HTTP Request
@@ -88,7 +88,7 @@ It can be used to check if member is in loyalty club or not.
 
 ### HTTP Request
 
-**HEAD** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**HEAD** `api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -139,7 +139,7 @@ Fetches member's properties.
 
 ### HTTP Request
 
-**GET** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**GET** `api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -165,7 +165,7 @@ When invalid authentication token is provided response `401 Unauthorized` is ret
 
 ### HTTP Request
 
-**PUT** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**PUT** `api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -185,7 +185,7 @@ send_email_welcome_message | If true and emails configured in loyalty club, emai
 ### Responses
 
 * **200** - success with member's properties in response body
-* **400 Bad request** - `msisdn` is invalid
+* **400 Bad request** - `msisdn` is invalid or there are [validation errors](#validation-on-members).
 * **409 Conflict** - member with `msisdn` already exists in loyalty club
 
 <aside class="notice">
@@ -200,7 +200,7 @@ It is intended for partial updates - not given properties are neither deleted no
 
 ### HTTP Request
 
-**PATCH** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**PATCH** `api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 
@@ -218,6 +218,7 @@ properties | JSON with properties for member | JSON Object
 ### Responses
 
 * **200** - success with member's properties in response body
+* **400 Bad request** - `msisdn` is invalid or there are [validation errors](#validation-on-members).
 * **404 Not found** - member with `msisdn` not found or it is invalid
 
 
@@ -233,7 +234,7 @@ It is possible to trigger optout message by setting `send_unsubscribe_message=tr
 
 ### HTTP Request
 
-**DELETE** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**DELETE** `api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
 

@@ -4,9 +4,9 @@ Api V1 endpoints that are in Api V2 will be soon deprecated. It will always work
 
 Main goal of Api V2 is to support internationalized member properties.
 
-You can use Api V2 only when your schema is ready to support it (*coming soon*).
+You can use Api V2 only when your schema is ready to support it.
 
-## Get loyalty club's schema
+## Get loyalty club's schema (deprecated)
 
 ```shell
 curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema" \
@@ -101,7 +101,7 @@ msisdn | unique member's msisdn as defined by E.164 (described above) Example: `
 Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Private-Token</code>.
 </aside>
 
-## Check if member exists
+## Check if member exists (deprecated)
 
 ```shell
 curl -I "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn" \
@@ -133,7 +133,7 @@ msisdn | unique member's msisdn as defined by E.164 (described above) Example: `
 Authentication with <code>X-Customer-Public-Token</code>.
 </aside>
 
-## Get member
+## Get member (deprecated)
 
 ```shell
 curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn" \
@@ -186,7 +186,7 @@ msisdn | unique member's msisdn as defined by E.164 (described above) Example: `
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
 </aside>
 
-## Create member
+## Create member (deprecated)
 
 Create member with given properties.
 
@@ -216,14 +216,14 @@ send_email_welcome_message | If true and emails configured in loyalty club, emai
 ### Responses
 
 * **200** - success with member's properties in response body
-* **400 Bad request** - `msisdn` is invalid
+* **400 Bad request** - `msisdn` is invalid or there are [validation errors](#validation-on-members).
 * **409 Conflict** - member with `msisdn` already exists in loyalty club
 
 <aside class="notice">
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
 </aside>
 
-## Update member
+## Update member (deprecated)
 
 Update member's properties with given ones.
 
@@ -251,14 +251,15 @@ properties | JSON with properties for member | JSON Object
 ### Responses
 
 * **200** - success with member's properties in response body
-* **404 Not found** - member with `msisdn` not found or it is invalid
+* **400 Bad request** - `msisdn` is invalid or there are [validation errors](#validation-on-members).
+* **404 Not found** - member with `msisdn` not found
 
 
 <aside class="notice">
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
 </aside>
 
-## Remove member
+## Remove member (deprecated)
 
 Removes member from loyalty club.
 
