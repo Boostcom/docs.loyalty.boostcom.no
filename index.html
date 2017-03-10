@@ -216,7 +216,9 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
+            <li><a href='https://loyalty.boostcom.no'>Boostcom Loyalty</a></li>
             <li><a href='http://boostcom.com/'>Boostcom</a></li>
+            <li><hr/></li>
             <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
         </ul>
     </div>
@@ -294,15 +296,219 @@ We use format without leading <code class="prettyprint">00</code> or <code class
 
 <p><em>Send token</em> action will trigger sending member token/password to provided msisdn no matter whether msisdn is already a member or not.</p>
 
+<h1 id="validation-on-members">Validation on members</h1>
+
+<p>All members&rsquo; endpoints have properties validation. Properties are validated to conform loyalty club&rsquo;s schema.</p>
+
+<p>If something is wrong, you will receive explanation of errors in response.</p>
+
+<aside class="warning">
+Errors format and strings are not yet stable and may change without further notice.
+</aside>
+
+<h2 id="schema-validation-errors">Schema validation errors</h2>
+<pre class="highlight shell tab-shell"><code>curl -X PUT -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\</span>
+    -H <span class="s2">"X-Customer-Private-Token: token"</span> <span class="se">\</span>
+    -H <span class="s2">"Content-Type: application/json"</span> -d <span class="s1">'{
+    "properties": {
+        "first_name": "",
+        "last_name": "err",
+        "gender": "man",
+        "birthday": "201X-01-01"
+    }
+}'</span> <span class="s2">"https://tbp.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span>
+</code></pre>
+<blockquote>
+<p>Example response (with code 400):</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"birthday"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"invalid_date_format"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"property"</span><span class="p">:</span><span class="w"> </span><span class="s2">"birthday"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"gender"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"value_not_match"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"property"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gender"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"value"</span><span class="p">:</span><span class="w"> </span><span class="s2">"man"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"values"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Mann, Kvinne"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"not_contain_required_property"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"property"</span><span class="p">:</span><span class="w"> </span><span class="s2">"first_name"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<table><thead>
+<tr>
+<th>Error</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>invalid_date_format</td>
+<td>Invalid date format</td>
+</tr>
+<tr>
+<td>invalid_time_format</td>
+<td>Invalid time format</td>
+</tr>
+<tr>
+<td>invalid_date_time_format</td>
+<td>Invalid date with time format</td>
+</tr>
+<tr>
+<td>must_be_valid_RFC3339_date_time_string</td>
+<td>Format beyond the RFC3339 standard</td>
+</tr>
+<tr>
+<td>invalid_URI</td>
+<td>Invalid URI</td>
+</tr>
+<tr>
+<td>additional_array_elements</td>
+<td>Additional elements in the array</td>
+</tr>
+<tr>
+<td>additional_properties</td>
+<td>Additional properties</td>
+</tr>
+<tr>
+<td>property_not_match_all_of</td>
+<td>The property did not match all of the required schemas</td>
+</tr>
+<tr>
+<td>property_not_match_any_of</td>
+<td>The property did not match any of the required schema</td>
+</tr>
+<tr>
+<td>property_matched_more_than_one</td>
+<td>The property matched more than one of the required schemas</td>
+</tr>
+<tr>
+<td>depends_on_a_missing_property</td>
+<td>The validated property has a property that depends on the other missing property</td>
+</tr>
+<tr>
+<td>value_not_match</td>
+<td>The property value did not match one of the given values.</td>
+</tr>
+<tr>
+<td>schema_cannot_be_found</td>
+<td>The extended schema cannot be found</td>
+</tr>
+<tr>
+<td>not_a_valid_schema</td>
+<td>The property was not a valid schema</td>
+</tr>
+<tr>
+<td>minimum_string_length</td>
+<td>The property was not of a minimum string length of minimum limit.</td>
+</tr>
+<tr>
+<td>maximum_string_length</td>
+<td>The property was not of a maximum string length of maximum limit.</td>
+</tr>
+<tr>
+<td>less_item_than_minimum</td>
+<td>The property did not contain a minimum number of minimum items limit</td>
+</tr>
+<tr>
+<td>more_item_than_maximum</td>
+<td>The property had more items than the allowed items limit</td>
+</tr>
+<tr>
+<td>less_properties_than_minimum</td>
+<td>The property did not contain a minimum number of properties</td>
+</tr>
+<tr>
+<td>more_properties_than_maximum</td>
+<td>The property had more properties than allowed</td>
+</tr>
+<tr>
+<td>not_have_value_of_exclusively</td>
+<td>The property did not have value of exclusively</td>
+</tr>
+<tr>
+<td>not_have_value_of_inclusively</td>
+<td>The property did not have value of inclusively</td>
+</tr>
+<tr>
+<td>more_decimal_places_than_maximum</td>
+<td>The property had more decimal places than the allowed maximum</td>
+</tr>
+<tr>
+<td>matched_the_disallowed_schema</td>
+<td>The property matched the disallowed schema</td>
+</tr>
+<tr>
+<td>the_regex_not_match</td>
+<td>The property did not match the regex</td>
+</tr>
+<tr>
+<td>not_contain_required_property</td>
+<td>The validated property did not contain a required property</td>
+</tr>
+<tr>
+<td>contained_undefined_properties</td>
+<td>The validated property contained undefined properties</td>
+</tr>
+<tr>
+<td>referenced_schema_cannot_be_found</td>
+<td>The referenced schema cannot be found</td>
+</tr>
+<tr>
+<td>invalid_schema</td>
+<td>The property was not a valid schema</td>
+</tr>
+<tr>
+<td>matched_one_or_more_types</td>
+<td>The property matched one or more of the given types</td>
+</tr>
+<tr>
+<td>one_or_more_types_not_match</td>
+<td>The property did not match one or more of the given types</td>
+</tr>
+<tr>
+<td>type_not_match</td>
+<td>The property did not match the given type</td>
+</tr>
+<tr>
+<td>contained_duplicated_array_values</td>
+<td>The property contained duplicated array values</td>
+</tr>
+<tr>
+<td>invalid_email</td>
+<td>Invalid email format</td>
+</tr>
+<tr>
+<td>disposable_email</td>
+<td>The email was disposable</td>
+</tr>
+<tr>
+<td>duplicated_email</td>
+<td>The email was duplicated in community</td>
+</tr>
+</tbody></table>
+
           <h1 id="api-v1-reference">Api V1 reference</h1>
 
 <p>Api V1 endpoints that are in Api V2 will be soon deprecated. It will always work, but it&rsquo;s not advised to use it.</p>
 
 <p>Main goal of Api V2 is to support internationalized member properties.</p>
 
-<p>You can use Api V2 only when your schema is ready to support it (<em>coming soon</em>).</p>
+<p>You can use Api V2 only when your schema is ready to support it.</p>
 
-<h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
+<h2 id="get-loyalty-clubs-schema-deprecated">Get loyalty club&rsquo;s schema (deprecated)</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
   -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
@@ -412,7 +618,7 @@ That <strong>member token</strong> could be used to authenticate <em>Create Memb
 Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Private-Token</code>.
 </aside>
 
-<h2 id="check-if-member-exists">Check if member exists</h2>
+<h2 id="check-if-member-exists-deprecated">Check if member exists (deprecated)</h2>
 <pre class="highlight shell tab-shell"><code>curl -I <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span> <span class="se">\</span>
   -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
@@ -456,7 +662,7 @@ Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Pri
 Authentication with <code>X-Customer-Public-Token</code>.
 </aside>
 
-<h2 id="get-member">Get member</h2>
+<h2 id="get-member-deprecated">Get member (deprecated)</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span> <span class="se">\</span>
   -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span> <span class="se">\</span>
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
@@ -518,7 +724,7 @@ Authentication with <code>X-Customer-Public-Token</code>.
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
 </aside>
 
-<h2 id="create-member">Create member</h2>
+<h2 id="create-member-deprecated">Create member (deprecated)</h2>
 
 <p>Create member with given properties.</p>
 
@@ -578,7 +784,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <ul>
 <li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
-<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid</li>
+<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid or there are <a href="#validation-on-members">validation errors</a>.</li>
 <li><strong>409 Conflict</strong> - member with <code class="prettyprint">msisdn</code> already exists in loyalty club</li>
 </ul>
 
@@ -586,7 +792,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
 </aside>
 
-<h2 id="update-member">Update member</h2>
+<h2 id="update-member-deprecated">Update member (deprecated)</h2>
 
 <p>Update member&rsquo;s properties with given ones.</p>
 
@@ -636,14 +842,15 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <ul>
 <li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
-<li><strong>404 Not found</strong> - member with <code class="prettyprint">msisdn</code> not found or it is invalid</li>
+<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid or there are <a href="#validation-on-members">validation errors</a>.</li>
+<li><strong>404 Not found</strong> - member with <code class="prettyprint">msisdn</code> not found</li>
 </ul>
 
 <aside class="notice">
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
 </aside>
 
-<h2 id="remove-member">Remove member</h2>
+<h2 id="remove-member-deprecated">Remove member (deprecated)</h2>
 
 <p>Removes member from loyalty club.</p>
 
@@ -698,11 +905,11 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
 </aside>
 
-          <h1 id="api-v2-reference-experimental">Api V2 reference (experimental)</h1>
+          <h1 id="api-v2-reference">Api V2 reference</h1>
 
-<p>You can use Api V2 fully, only when your schema is ready to support it (<em>coming soon</em>).</p>
+<p>You can use Api V2 fully, only when your schema is ready to support it.</p>
 
-<p>Please don&rsquo;t use it before contacting with us.</p>
+<p>All new customers should have schema v2.</p>
 
 <h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
@@ -756,7 +963,7 @@ We support <strong>JSON schema Draft V4</strong> with format extension for <code
 
 <ul>
 <li><code class="prettyprint">languages</code> - array of languages set up in loyalty club</li>
-<li><code class="prettyprint">default_language</code> - default language used in loyalty club and also used for mappings to Api V1</li>
+<li><code class="prettyprint">default_language</code> - default language used in loyalty club and also used for mappings to Api v2</li>
 <li><code class="prettyprint">version</code> - version of schema, currently the newest is <code class="prettyprint">v2</code></li>
 </ul>
 
@@ -793,7 +1000,7 @@ Authentication only with <code>X-Customer-Public-Token</code>.
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>HEAD</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>HEAD</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -853,7 +1060,7 @@ Authentication with <code>X-Customer-Public-Token</code>.
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>GET</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -892,7 +1099,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>PUT</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>PUT</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -942,7 +1149,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <ul>
 <li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
-<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid</li>
+<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid or there are <a href="#validation-on-members">validation errors</a>.</li>
 <li><strong>409 Conflict</strong> - member with <code class="prettyprint">msisdn</code> already exists in loyalty club</li>
 </ul>
 
@@ -958,7 +1165,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>PATCH</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>PATCH</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -998,6 +1205,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <ul>
 <li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
+<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid or there are <a href="#validation-on-members">validation errors</a>.</li>
 <li><strong>404 Not found</strong> - member with <code class="prettyprint">msisdn</code> not found or it is invalid</li>
 </ul>
 
@@ -1013,7 +1221,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>DELETE</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>DELETE</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 

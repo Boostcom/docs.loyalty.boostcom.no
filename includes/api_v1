@@ -4,9 +4,9 @@
 
 <p>Main goal of Api V2 is to support internationalized member properties.</p>
 
-<p>You can use Api V2 only when your schema is ready to support it (<em>coming soon</em>).</p>
+<p>You can use Api V2 only when your schema is ready to support it.</p>
 
-<h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
+<h2 id="get-loyalty-clubs-schema-deprecated">Get loyalty club&rsquo;s schema (deprecated)</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
   -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
@@ -116,7 +116,7 @@ That <strong>member token</strong> could be used to authenticate <em>Create Memb
 Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Private-Token</code>.
 </aside>
 
-<h2 id="check-if-member-exists">Check if member exists</h2>
+<h2 id="check-if-member-exists-deprecated">Check if member exists (deprecated)</h2>
 <pre class="highlight shell tab-shell"><code>curl -I <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span> <span class="se">\</span>
   -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
@@ -160,7 +160,7 @@ Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Pri
 Authentication with <code>X-Customer-Public-Token</code>.
 </aside>
 
-<h2 id="get-member">Get member</h2>
+<h2 id="get-member-deprecated">Get member (deprecated)</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn"</span> <span class="se">\</span>
   -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span> <span class="se">\</span>
   -H <span class="s2">"X-Product-Name: custom-product-name"</span>
@@ -222,7 +222,7 @@ Authentication with <code>X-Customer-Public-Token</code>.
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
 </aside>
 
-<h2 id="create-member">Create member</h2>
+<h2 id="create-member-deprecated">Create member (deprecated)</h2>
 
 <p>Create member with given properties.</p>
 
@@ -282,7 +282,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <ul>
 <li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
-<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid</li>
+<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid or there are <a href="#validation-on-members">validation errors</a>.</li>
 <li><strong>409 Conflict</strong> - member with <code class="prettyprint">msisdn</code> already exists in loyalty club</li>
 </ul>
 
@@ -290,7 +290,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
 </aside>
 
-<h2 id="update-member">Update member</h2>
+<h2 id="update-member-deprecated">Update member (deprecated)</h2>
 
 <p>Update member&rsquo;s properties with given ones.</p>
 
@@ -340,14 +340,15 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <ul>
 <li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
-<li><strong>404 Not found</strong> - member with <code class="prettyprint">msisdn</code> not found or it is invalid</li>
+<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid or there are <a href="#validation-on-members">validation errors</a>.</li>
+<li><strong>404 Not found</strong> - member with <code class="prettyprint">msisdn</code> not found</li>
 </ul>
 
 <aside class="notice">
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
 </aside>
 
-<h2 id="remove-member">Remove member</h2>
+<h2 id="remove-member-deprecated">Remove member (deprecated)</h2>
 
 <p>Removes member from loyalty club.</p>
 

@@ -1,8 +1,8 @@
-<h1 id="api-v2-reference-experimental">Api V2 reference (experimental)</h1>
+<h1 id="api-v2-reference">Api V2 reference</h1>
 
-<p>You can use Api V2 fully, only when your schema is ready to support it (<em>coming soon</em>).</p>
+<p>You can use Api V2 fully, only when your schema is ready to support it.</p>
 
-<p>Please don&rsquo;t use it before contacting with us.</p>
+<p>All new customers should have schema v2.</p>
 
 <h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
@@ -56,7 +56,7 @@ We support <strong>JSON schema Draft V4</strong> with format extension for <code
 
 <ul>
 <li><code class="prettyprint">languages</code> - array of languages set up in loyalty club</li>
-<li><code class="prettyprint">default_language</code> - default language used in loyalty club and also used for mappings to Api V1</li>
+<li><code class="prettyprint">default_language</code> - default language used in loyalty club and also used for mappings to Api v2</li>
 <li><code class="prettyprint">version</code> - version of schema, currently the newest is <code class="prettyprint">v2</code></li>
 </ul>
 
@@ -93,7 +93,7 @@ Authentication only with <code>X-Customer-Public-Token</code>.
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>HEAD</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>HEAD</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -153,7 +153,7 @@ Authentication with <code>X-Customer-Public-Token</code>.
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>GET</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -192,7 +192,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>PUT</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>PUT</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -242,7 +242,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <ul>
 <li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
-<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid</li>
+<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid or there are <a href="#validation-on-members">validation errors</a>.</li>
 <li><strong>409 Conflict</strong> - member with <code class="prettyprint">msisdn</code> already exists in loyalty club</li>
 </ul>
 
@@ -258,7 +258,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>PATCH</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>PATCH</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -298,6 +298,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <ul>
 <li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
+<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid or there are <a href="#validation-on-members">validation errors</a>.</li>
 <li><strong>404 Not found</strong> - member with <code class="prettyprint">msisdn</code> not found or it is invalid</li>
 </ul>
 
@@ -313,7 +314,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>DELETE</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
+<p><strong>DELETE</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
