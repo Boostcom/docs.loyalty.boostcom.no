@@ -58,6 +58,8 @@ We support <strong>JSON schema Draft V4</strong> with format extension for <code
 <li><code class="prettyprint">languages</code> - array of languages set up in loyalty club</li>
 <li><code class="prettyprint">default_language</code> - default language used in loyalty club and also used for mappings to Api v2</li>
 <li><code class="prettyprint">version</code> - version of schema, currently the newest is <code class="prettyprint">v2</code></li>
+<li><code class="prettyprint">products</code> - properties scoping and ordering by product name, default one is <code class="prettyprint">default</code></li>
+<li><code class="prettyprint">required</code> - required properties for member</li>
 </ul>
 
 <h3 id="http-request">HTTP Request</h3>
