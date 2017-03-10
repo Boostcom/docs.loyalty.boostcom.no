@@ -61,6 +61,8 @@ Keys explanation:
 * `languages` - array of languages set up in loyalty club
 * `default_language` - default language used in loyalty club and also used for mappings to Api v2
 * `version` - version of schema, currently the newest is `v2`
+* `products` - properties scoping and ordering by product name, default one is `default`
+* `required` - required properties for member
 
 ### HTTP Request
 
