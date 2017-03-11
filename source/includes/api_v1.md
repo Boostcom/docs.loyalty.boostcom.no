@@ -261,6 +261,16 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 ## Remove member (deprecated)
 
+```shell
+curl -X DELETE -H "X-Customer-Private-Token: alphanumeric_string" \
+     -H "X-Product-Name: custom-product-name" \
+     "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema"
+```
+
+> Successful removal is indicated by response code 200
+
+**DELETE** `api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+
 Removes member from loyalty club.
 
 It is possible to trigger optout message by setting `send_unsubscribe_message=true` query string parameter.

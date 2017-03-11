@@ -172,5 +172,5 @@ one_or_more_types_not_match | The property did not match one or more of the give
 type_not_match | The property did not match the given type
 contained_duplicated_array_values | The property contained duplicated array values
 invalid_email | Invalid email format
-disposable_email | The email was disposable
+disposable_email | The email was [disposable](https://github.com/lisinge/valid_email2/blob/master/vendor/disposable_emails.yml)
 duplicated_email | The email was duplicated in community

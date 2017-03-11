@@ -236,6 +236,14 @@ It is possible to trigger optout message by setting `send_unsubscribe_message=tr
 
 ### HTTP Request
 
+```shell
+curl -X DELETE -H "X-Customer-Private-Token: alphanumeric_string" \
+     -H "X-Product-Name: custom-product-name" \
+     "https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema"
+```
+
+> Successful removal is indicated by response code 200
+
 **DELETE** `api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
 
 ### URL Parameters
