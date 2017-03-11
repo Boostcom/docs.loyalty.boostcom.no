@@ -349,6 +349,15 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 </aside>
 
 <h2 id="remove-member-deprecated">Remove member (deprecated)</h2>
+<pre class="highlight shell tab-shell"><code>curl -X DELETE -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span> <span class="se">\</span>
+     -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\</span>
+     <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema"</span>
+</code></pre>
+<blockquote>
+<p>Successful removal is indicated by response code 200</p>
+</blockquote>
+
+<p><strong>DELETE</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <p>Removes member from loyalty club.</p>
 

@@ -492,7 +492,7 @@ Errors format and strings are not yet stable and may change without further noti
 </tr>
 <tr>
 <td>disposable_email</td>
-<td>The email was disposable</td>
+<td>The email was <a href="https://github.com/lisinge/valid_email2/blob/master/vendor/disposable_emails.yml">disposable</a></td>
 </tr>
 <tr>
 <td>duplicated_email</td>
@@ -851,6 +851,15 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 </aside>
 
 <h2 id="remove-member-deprecated">Remove member (deprecated)</h2>
+<pre class="highlight shell tab-shell"><code>curl -X DELETE -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span> <span class="se">\</span>
+     -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\</span>
+     <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema"</span>
+</code></pre>
+<blockquote>
+<p>Successful removal is indicated by response code 200</p>
+</blockquote>
+
+<p><strong>DELETE</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
 <p>Removes member from loyalty club.</p>
 
@@ -1222,6 +1231,13 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 <p>It is possible to trigger optout message by setting <code class="prettyprint">send_unsubscribe_message=true</code> query string parameter.</p>
 
 <h3 id="http-request">HTTP Request</h3>
+<pre class="highlight shell tab-shell"><code>curl -X DELETE -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span> <span class="se">\</span>
+     -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\</span>
+     <span class="s2">"https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema"</span>
+</code></pre>
+<blockquote>
+<p>Successful removal is indicated by response code 200</p>
+</blockquote>
 
 <p><strong>DELETE</strong> <code class="prettyprint">api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn</code></p>
 
