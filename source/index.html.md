@@ -8,8 +8,8 @@ toc_footers:
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
-  - api_v1
   - api_v2
+  - api_v1
 
 search: true
 ---
