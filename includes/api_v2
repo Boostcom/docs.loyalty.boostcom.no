@@ -4,6 +4,8 @@
 
 <p>All new customers should have schema v2.</p>
 
+<p>Existing customers will be gradually migrated to schema v2.</p>
+
 <h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
   -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
