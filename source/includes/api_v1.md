@@ -1,6 +1,6 @@
 # Api V1 reference
 
-Api V1 endpoints that are in Api V2 will be soon deprecated. It will always work, but it's not advised to use it.
+Api V1 endpoints that are in Api V2 are deprecated. It will always work, but it's not advised to use it.
 
 Main goal of Api V2 is to support internationalized member properties.
 

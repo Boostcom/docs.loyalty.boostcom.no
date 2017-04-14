@@ -4,6 +4,8 @@ You can use Api V2 fully, only when your schema is ready to support it.
 
 All new customers should have schema v2.
 
+Existing customers will be gradually migrated to schema v2.
+
 ## Get loyalty club's schema
 
 ```shell
