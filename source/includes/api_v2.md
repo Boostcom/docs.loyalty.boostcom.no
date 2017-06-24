@@ -89,7 +89,7 @@ If msisdn is not valid, then `400 Bad Request` is returned.
 
 ### HTTP Request
 
-**POST** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token`
+**POST** `api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token`
 
 ### URL Parameters
 
