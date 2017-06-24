@@ -2,10 +2,6 @@
 
 You can use Api V2 fully, only when your schema is ready to support it.
 
-All new customers should have schema v2.
-
-Existing customers will be gradually migrated to schema v2.
-
 ## Get loyalty club's schema
 
 ```shell
@@ -60,11 +56,11 @@ We support **JSON schema Draft V4** with format extension for `date` (YYYY-MM-DD
 
 Keys explanation:
 
-* `languages` - array of languages set up in loyalty club
-* `default_language` - default language used in loyalty club and also used for mappings to Api v2
-* `version` - version of schema, currently the newest is `v2`
-* `products` - properties scoping and ordering by product name, default one is `default`
-* `required` - required properties for member
+* `languages` [Array of strings] - array of languages set up in loyalty club
+* `default_language` [string] - default language used in loyalty club and also used for mappings to Api v2
+* `version` [string] - version of schema, currently the newest is `v2`
+* `products` [Object] - properties scoping and ordering by product name, default one is `default`
+* `required` [Array of strings] - required properties for member
 
 ### HTTP Request
 
@@ -76,6 +72,34 @@ loyalty_club_slug | unique slugified name of the loyalty club. Example: `booster
 
 <aside class="notice">
 Authentication only with <code>X-Customer-Public-Token</code>.
+</aside>
+
+## Send member token
+
+**Member tokens** are used to authenticate actions on particular members.
+**Member token** could be issued even before registering enduser as a member in community.
+In that case we create temporary token that is valid till end of day.
+That **member token** could be used to authenticate *Create Member* action described below.
+
+It sends member token to the user via SMS.
+
+It can be used multiple times.
+
+If msisdn is not valid, then `400 Bad Request` is returned.
+
+### HTTP Request
+
+**POST** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
+msisdn | unique member's msisdn as defined by E.164 (described above) Example: `4740485124`.
+
+<aside class="notice">
+Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Private-Token</code>.
 </aside>
 
 ## Check if member exists
