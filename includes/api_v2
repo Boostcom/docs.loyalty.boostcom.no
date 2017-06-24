@@ -2,10 +2,6 @@
 
 <p>You can use Api V2 fully, only when your schema is ready to support it.</p>
 
-<p>All new customers should have schema v2.</p>
-
-<p>Existing customers will be gradually migrated to schema v2.</p>
-
 <h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
   -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
@@ -57,11 +53,11 @@ We support <strong>JSON schema Draft V4</strong> with format extension for <code
 <p>Keys explanation:</p>
 
 <ul>
-<li><code class="prettyprint">languages</code> - array of languages set up in loyalty club</li>
-<li><code class="prettyprint">default_language</code> - default language used in loyalty club and also used for mappings to Api v2</li>
-<li><code class="prettyprint">version</code> - version of schema, currently the newest is <code class="prettyprint">v2</code></li>
-<li><code class="prettyprint">products</code> - properties scoping and ordering by product name, default one is <code class="prettyprint">default</code></li>
-<li><code class="prettyprint">required</code> - required properties for member</li>
+<li><code class="prettyprint">languages</code> [Array of strings] - array of languages set up in loyalty club</li>
+<li><code class="prettyprint">default_language</code> [string] - default language used in loyalty club and also used for mappings to Api v2</li>
+<li><code class="prettyprint">version</code> [string] - version of schema, currently the newest is <code class="prettyprint">v2</code></li>
+<li><code class="prettyprint">products</code> [Object] - properties scoping and ordering by product name, default one is <code class="prettyprint">default</code></li>
+<li><code class="prettyprint">required</code> [Array of strings] - required properties for member</li>
 </ul>
 
 <h3 id="http-request">HTTP Request</h3>
@@ -82,6 +78,45 @@ We support <strong>JSON schema Draft V4</strong> with format extension for <code
 
 <aside class="notice">
 Authentication only with <code>X-Customer-Public-Token</code>.
+</aside>
+
+<h2 id="send-member-token">Send member token</h2>
+
+<p><strong>Member tokens</strong> are used to authenticate actions on particular members.
+<strong>Member token</strong> could be issued even before registering enduser as a member in community.
+In that case we create temporary token that is valid till end of day.
+That <strong>member token</strong> could be used to authenticate <em>Create Member</em> action described below.</p>
+
+<p>It sends member token to the user via SMS.</p>
+
+<p>It can be used multiple times.</p>
+
+<p>If msisdn is not valid, then <code class="prettyprint">400 Bad Request</code> is returned.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><strong>POST</strong> <code class="prettyprint">api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>loyalty_club_slug</td>
+<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
+</tr>
+<tr>
+<td>msisdn</td>
+<td>unique member&rsquo;s msisdn as defined by E.164 (described above) Example: <code class="prettyprint">4740485124</code>.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Private-Token</code>.
 </aside>
 
 <h2 id="check-if-member-exists">Check if member exists</h2>
