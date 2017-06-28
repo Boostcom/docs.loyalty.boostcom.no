@@ -145,6 +145,7 @@ curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:
 
 ```json
 {
+  "id": 42,
   "properties": {
     "first_name": "Ola",
     "last_name": "Nordmann",
@@ -158,11 +159,21 @@ curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:
       2011,
       2011
     ]
-  }
+  },
+  "created_at": "2017-01-19T10:07:08.336+01:00",
+  "updated_at": "2017-04-03T09:35:19.313+02:00"
 }
 ```
 
 Fetches member's properties.
+
+
+Key | Description | Type
+--------- | ----------- | ---------
+id | Member ID | integer
+properties | Object with member's properties | JSON Object
+created_at | Time when the user was firstly created | string
+updated_at | Time when the user was last updated | string
 
 If loyalty club's schema is in v2, some of properties will be mapped to keep old behaviour.
 
