@@ -169,6 +169,7 @@ Authentication with <code>X-Customer-Public-Token</code>.
 <p>When successful, the above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w">
   </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ola"</span><span class="p">,</span><span class="w">
     </span><span class="s2">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nordmann"</span><span class="p">,</span><span class="w">
@@ -182,10 +183,41 @@ Authentication with <code>X-Customer-Public-Token</code>.
       </span><span class="mi">2011</span><span class="p">,</span><span class="w">
       </span><span class="mi">2011</span><span class="w">
     </span><span class="p">]</span><span class="w">
-  </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-19T10:07:08.336+01:00"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-04-03T09:35:19.313+02:00"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 <p>Fetches member&rsquo;s properties.</p>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>Member ID</td>
+<td>integer</td>
+</tr>
+<tr>
+<td>properties</td>
+<td>Object with member&rsquo;s properties</td>
+<td>JSON Object</td>
+</tr>
+<tr>
+<td>created_at</td>
+<td>Time when the user was firstly created</td>
+<td>string</td>
+</tr>
+<tr>
+<td>updated_at</td>
+<td>Time when the user was last updated</td>
+<td>string</td>
+</tr>
+</tbody></table>
 
 <p>If loyalty club&rsquo;s schema is in v2, some of properties will be mapped to keep old behaviour.</p>
 
