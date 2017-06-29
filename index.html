@@ -687,7 +687,8 @@ Authentication with <code>X-Customer-Public-Token</code>.
       </span><span class="mi">2010</span><span class="p">,</span><span class="w">
       </span><span class="mi">2011</span><span class="p">,</span><span class="w">
       </span><span class="mi">2011</span><span class="w">
-    </span><span class="p">]</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no"</span><span class="w">
   </span><span class="p">},</span><span class="w">
   </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-19T10:07:08.336+01:00"</span><span class="p">,</span><span class="w">
   </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-04-03T09:35:19.313+02:00"</span><span class="w">
@@ -711,6 +712,11 @@ Authentication with <code>X-Customer-Public-Token</code>.
 <td>properties</td>
 <td>Object with member&rsquo;s properties</td>
 <td>JSON Object</td>
+</tr>
+<tr>
+<td>properties[&lsquo;language&rsquo;]</td>
+<td>Language used by user</td>
+<td>string</td>
 </tr>
 <tr>
 <td>created_at</td>
@@ -798,6 +804,11 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 <td>properties</td>
 <td>JSON with properties for member</td>
 <td>JSON Object</td>
+</tr>
+<tr>
+<td>properties[&lsquo;language&rsquo;]</td>
+<td>Language used by user, if not set then &ldquo;default_language&rdquo; is taken from schema</td>
+<td>string</td>
 </tr>
 <tr>
 <td>send_welcome_message</td>
