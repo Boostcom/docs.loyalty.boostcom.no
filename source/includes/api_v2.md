@@ -159,7 +159,8 @@ curl "https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/members/:
       2010,
       2011,
       2011
-    ]
+    ],
+    "language": "no"
   },
   "created_at": "2017-01-19T10:07:08.336+01:00",
   "updated_at": "2017-04-03T09:35:19.313+02:00"
@@ -172,6 +173,7 @@ Key | Description | Type
 --------- | ----------- | ---------
 id | Member ID | integer
 properties | Object with member's properties | JSON Object
+properties\['language'\] | Language used by user | string
 created_at | Time when the user was firstly created | string
 updated_at | Time when the user was last updated | string
 
@@ -217,6 +219,7 @@ msisdn | unique member's msisdn as defined by E.164 (described above) Example: `
 Parameter | Description | Type
 --------- | ----------- | ---------
 properties | JSON with properties for member | JSON Object
+properties\['language'\] | Language used by user, if not set then "default_language" is taken from schema | string
 send_welcome_message | If true, SMS welcome message will be send to member | Boolean
 send_email_welcome_message | If true and emails configured in loyalty club, email welcome (verification) message will be send to member | Boolean
 
