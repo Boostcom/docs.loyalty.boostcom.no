@@ -223,6 +223,10 @@ properties\['language'\] | Language used by user, if not set then "default_langu
 send_welcome_message | If true, SMS welcome message will be send to member | Boolean
 send_email_welcome_message | If true and emails configured in loyalty club, email welcome (verification) message will be send to member | Boolean
 
+<aside class="notice">
+There is possibility to have multiple SMS welcome messages. Sent will be the one that matches Product or default one.
+<aside>
+
 ### Responses
 
 * **200** - success with member's properties in response body
