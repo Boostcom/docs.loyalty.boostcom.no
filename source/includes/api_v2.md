@@ -225,7 +225,7 @@ send_email_welcome_message | If true and emails configured in loyalty club, emai
 
 <aside class="notice">
 There is possibility to have multiple SMS welcome messages. Sent will be the one that matches Product or default one.
-<aside>
+</aside>
 
 ### Responses
 
