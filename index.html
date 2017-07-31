@@ -822,13 +822,15 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 </tr>
 </tbody></table>
 
-<h3 id="responses">Responses</h3>
+<aside class="notice">
+There is possibility to have multiple SMS welcome messages. Sent will be the one that matches Product or default one.
+<aside>
 
-<ul>
-<li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
-<li><strong>400 Bad request</strong> - <code class="prettyprint">msisdn</code> is invalid or there are <a href="#validation-on-members">validation errors</a>.</li>
-<li><strong>409 Conflict</strong> - member with <code class="prettyprint">msisdn</code> already exists in loyalty club</li>
-</ul>
+### Responses
+
+* **200** - success with member&rsquo;s properties in response body
+* **400 Bad request** - `msisdn` is invalid or there are [validation errors](#validation-on-members).
+* **409 Conflict** - member with `msisdn` already exists in loyalty club
 
 <aside class="notice">
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
