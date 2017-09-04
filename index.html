@@ -958,11 +958,9 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
           <h1 id="api-v1-reference-deprecated">Api V1 reference (deprecated)</h1>
 
-<p>Api V1 endpoints that are in Api V2 are deprecated. It will always work, but it&rsquo;s not advised to use it.</p>
+<p>Api V1 endpoints that are in Api V2 are deprecated. Please don&rsquo;t use it.</p>
 
 <p>Main goal of Api V2 is to support internationalized member properties.</p>
-
-<p>You can use Api V2 only when your schema is ready to support it.</p>
 
 <h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
@@ -1396,6 +1394,546 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 <ul>
 <li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
 <li><strong>404 Not found</strong> - member with <code class="prettyprint">msisdn</code> not found or it is invalid</li>
+</ul>
+
+<aside class="notice">
+Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
+</aside>
+
+          <h1 id="api-v3-reference-draft-work-in-progress">Api V3 reference (draft, work in progress)</h1>
+
+<p><strong>This is only draft!</strong></p>
+
+<p>You can use Api V3 only when your customer is migrated to new backend service for data.</p>
+
+<h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Product-Name: custom-product-name"</span>
+</code></pre>
+<blockquote>
+<p>When successful, the above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://json-schema.org/draft-04/schema#"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"identifiers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"en"</span><span class="p">,</span><span class="w"> </span><span class="s2">"no"</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"default_language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v2"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"birthday"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"bikes_and_cars"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"sportwear"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"first_name"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"last_name"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"birthday"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Properties for members are defined as part of the loyalty club they belong to.
+To describe member properties we use <a href="http://json-schema.org/documentation.html">JSON Schema</a> definition.
+Properties of each member must conform to the defined schema.
+We support <strong>JSON schema Draft V4</strong> with format extension for <code class="prettyprint">date</code> (YYYY-MM-DD).</p>
+
+<p>Keys explanation:</p>
+
+<ul>
+<li><code class="prettyprint">identifiers</code> [Array of strings] - fields that are set to identify member</li>
+<li><code class="prettyprint">languages</code> [Array of strings] - array of languages set up in loyalty club</li>
+<li><code class="prettyprint">default_language</code> [string] - default language used in loyalty club and also used for mappings to Api v2</li>
+<li><code class="prettyprint">version</code> [string] - version of schema, currently the newest is <code class="prettyprint">v2</code></li>
+<li><code class="prettyprint">products</code> [Object] - properties scoping and ordering by product name, default one is <code class="prettyprint">default</code></li>
+<li><code class="prettyprint">required</code> [Array of strings] - required properties for member</li>
+</ul>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/member_schema</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>loyalty_club_slug</td>
+<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Authentication only with <code>X-Customer-Public-Token</code>.
+</aside>
+
+<h2 id="send-member-token">Send member token</h2>
+
+<p><strong>Member tokens</strong> are used to authenticate actions on particular members.
+<strong>Member token</strong> could be issued even before registering enduser as a member in community.
+In that case we create temporary token that is valid till end of day.
+That <strong>member token</strong> could be used to authenticate <em>Create Member</em> action described below.</p>
+
+<p>It sends member token to the user via SMS.</p>
+
+<p>It can be used multiple times.</p>
+
+<p>If msisdn is not valid, then <code class="prettyprint">400 Bad Request</code> is returned.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><strong>POST</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>loyalty_club_slug</td>
+<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
+</tr>
+<tr>
+<td>msisdn</td>
+<td>unique member&rsquo;s msisdn as defined by E.164 (described above) Example: <code class="prettyprint">4740485124</code>.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Private-Token</code>.
+</aside>
+
+<h2 id="check-if-member-exists">Check if member exists</h2>
+<pre class="highlight shell tab-shell"><code>curl -I <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Product-Name: custom-product-name"</span>
+</code></pre>
+<blockquote>
+<p>Response will be 200 or 404 code.</p>
+</blockquote>
+
+<p>It can be used to check if member is in loyalty club or not.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><strong>HEAD</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
+
+<p><strong>HEAD</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn</code></p>
+
+<p><strong>HEAD</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>loyalty_club_slug</td>
+<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
+</tr>
+<tr>
+<td>id</td>
+<td>member&rsquo;s ID.</td>
+</tr>
+<tr>
+<td>msisdn</td>
+<td>unique member&rsquo;s msisdn as defined by E.164 (described above). Example: <code class="prettyprint">4740485124</code>.</td>
+</tr>
+<tr>
+<td>email</td>
+<td>unique member&rsquo;s email.</td>
+</tr>
+</tbody></table>
+
+<h3 id="response-codes">Response codes</h3>
+
+<ul>
+<li><strong>200</strong> - member exists</li>
+<li><strong>404 Not found</strong> - member with given identifier not found</li>
+</ul>
+
+<aside class="notice">
+Authentication with <code>X-Customer-Public-Token</code>.
+</aside>
+
+<h2 id="get-member">Get member</h2>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Product-Name: custom-product-name"</span>
+</code></pre>
+<blockquote>
+<p>When successful, the above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ola"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Nordmann"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"birthday"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1990-10-23"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="s2">"bikes_and_cars"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"sportwear"</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"child_birth_years"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="mi">2010</span><span class="p">,</span><span class="w">
+      </span><span class="mi">2011</span><span class="p">,</span><span class="w">
+      </span><span class="mi">2011</span><span class="w">
+    </span><span class="p">],</span><span class="w">
+    </span><span class="s2">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"sms_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"enabled"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"email_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"hard_bounced"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"push_status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"disabled"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-01-19T10:07:08.336+01:00"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-04-03T09:35:19.313+02:00"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p>Fetches member&rsquo;s properties.</p>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>Member ID</td>
+<td>integer</td>
+</tr>
+<tr>
+<td>properties</td>
+<td>Object with member&rsquo;s properties</td>
+<td>JSON Object</td>
+</tr>
+<tr>
+<td>properties[&lsquo;language&rsquo;]</td>
+<td>Language used by user</td>
+<td>string</td>
+</tr>
+<tr>
+<td>consents</td>
+<td>[incoming]</td>
+<td>JSON Object</td>
+</tr>
+<tr>
+<td>sms_status</td>
+<td>Status of sms channel</td>
+<td>string</td>
+</tr>
+<tr>
+<td>email_status</td>
+<td>Status of email channel</td>
+<td>string</td>
+</tr>
+<tr>
+<td>push_status</td>
+<td>Status of push channel</td>
+<td>string</td>
+</tr>
+<tr>
+<td>created_at</td>
+<td>Time when the user was firstly created</td>
+<td>string</td>
+</tr>
+<tr>
+<td>updated_at</td>
+<td>Time when the user was last updated</td>
+<td>string</td>
+</tr>
+</tbody></table>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
+
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn</code></p>
+
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>loyalty_club_slug</td>
+<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
+</tr>
+<tr>
+<td>id</td>
+<td>member&rsquo;s ID.</td>
+</tr>
+<tr>
+<td>msisdn</td>
+<td>unique member&rsquo;s msisdn as defined by E.164 (described above). Example: <code class="prettyprint">4740485124</code>.</td>
+</tr>
+<tr>
+<td>email</td>
+<td>unique member&rsquo;s email.</td>
+</tr>
+</tbody></table>
+
+<h3 id="responses">Responses</h3>
+
+<ul>
+<li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
+<li><strong>404 Not found</strong> - member with given identifier not found </li>
+</ul>
+
+<aside class="notice">
+Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
+</aside>
+
+<h2 id="create-member">Create member</h2>
+
+<p>Create member with given properties.</p>
+
+<p>When invalid authentication token is provided response <code class="prettyprint">401 Unauthorized</code> is returned disregarding whether member exists or not.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><strong>POST</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>loyalty_club_slug</td>
+<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
+</tr>
+<tr>
+<td>id</td>
+<td>member&rsquo;s ID</td>
+</tr>
+</tbody></table>
+
+<h3 id="post-json-parameters">POST (JSON) Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>properties</td>
+<td>JSON with properties for member</td>
+<td>JSON Object</td>
+</tr>
+<tr>
+<td>properties[&lsquo;language&rsquo;]</td>
+<td>Language used by user, if not set then &ldquo;default_language&rdquo; is taken from schema</td>
+<td>string</td>
+</tr>
+<tr>
+<td>send_welcome_message</td>
+<td>If true, SMS welcome message will be send to member</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>send_email_welcome_message</td>
+<td>If true and emails configured in loyalty club, email welcome (verification) message will be send to member</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>sms_enabled</td>
+<td>If true SMS channel will be enabled for member</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>email_enabled</td>
+<td>If true email channel will be enabled for member</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>push_enabled</td>
+<td>If true push channel will be enabled for member</td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+There is possibility to have multiple SMS welcome messages. Sent will be the one that matches Product or default one.
+</aside>
+
+<h3 id="responses">Responses</h3>
+
+<ul>
+<li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
+<li><strong>400 Bad request</strong> - there are <a href="#validation-on-members">validation errors</a>.</li>
+</ul>
+
+<aside class="notice">
+Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
+</aside>
+
+<h2 id="update-member">Update member</h2>
+
+<p>Update member&rsquo;s properties with given ones.</p>
+
+<p>It is intended for partial updates - not given properties are neither deleted nor overwritten.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><strong>PATCH</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>loyalty_club_slug</td>
+<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
+</tr>
+<tr>
+<td>id</td>
+<td>member&rsquo;s ID.</td>
+</tr>
+</tbody></table>
+
+<h3 id="patch-json-parameters">PATCH (JSON) Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>properties</td>
+<td>JSON with properties for member</td>
+<td>JSON Object</td>
+</tr>
+<tr>
+<td>sms_enabled</td>
+<td>If true SMS channel will be enabled for member</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>email_enabled</td>
+<td>If true email channel will be enabled for member</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>push_enabled</td>
+<td>If true push channel will be enabled for member</td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+
+<h3 id="responses">Responses</h3>
+
+<ul>
+<li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
+<li><strong>400 Bad request</strong> - there are <a href="#validation-on-members">validation errors</a>.</li>
+<li><strong>404 Not found</strong> - member with ID was not found</li>
+</ul>
+
+<aside class="notice">
+Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
+</aside>
+
+<h2 id="remove-member">Remove member</h2>
+
+<p>Removes member from loyalty club.</p>
+
+<p>It is possible to trigger optout message by setting <code class="prettyprint">send_unsubscribe_message=true</code> query string parameter.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+<pre class="highlight shell tab-shell"><code>curl -X DELETE -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span> <span class="se">\</span>
+     -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\</span>
+     <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span>
+</code></pre>
+<blockquote>
+<p>Successful removal is indicated by response code 200</p>
+</blockquote>
+
+<p><strong>DELETE</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>loyalty_club_slug</td>
+<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
+</tr>
+<tr>
+<td>id</td>
+<td>member&rsquo;s ID.</td>
+</tr>
+</tbody></table>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>send_unsubscribe_message</td>
+<td>If true, optout message will be send to member. Example: <code class="prettyprint">true</code>.</td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+
+<h3 id="responses">Responses</h3>
+
+<ul>
+<li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
+<li><strong>404 Not found</strong> - member not found</li>
 </ul>
 
 <aside class="notice">
