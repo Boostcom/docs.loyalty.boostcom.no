@@ -1,13 +1,13 @@
-# Api V1 reference (deprecated)
+# Api V3 reference (draft, work in progress)
 
-Api V1 endpoints that are in Api V2 are deprecated. Please don't use it.
+**This is only draft!**
 
-Main goal of Api V2 is to support internationalized member properties.
+You can use Api V3 only when your customer is migrated to new backend service for data.
 
 ## Get loyalty club's schema
 
 ```shell
-curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema" \
+curl "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/member_schema" \
   -H "X-Customer-Public-Token: alphanumeric_string" \
   -H "X-Product-Name: custom-product-name"
 ```
@@ -18,27 +18,31 @@ curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_sc
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
+  "identifiers": ["email"],
+  "languages": ["en", "no"],
+  "default_language": "no",
+  "version": "v2",
   "properties": {
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
     "first_name": {
-      "title": "Fornavn",
       "type": "string"
     },
     "last_name": {
-      "title": "Etternavn",
       "type": "string"
     },
     "birthday": {
-      "title": "Fødselsdato",
       "type": "string",
       "format": "date"
     },
     "interests": {
-      "title": "Interesser",
       "type": "array",
       "items": {
         "type": "string",
         "enum": [
-          "bikes & cars",
+          "bikes_and_cars",
           "sportwear"
         ]
       }
@@ -57,11 +61,18 @@ To describe member properties we use [JSON Schema](http://json-schema.org/docume
 Properties of each member must conform to the defined schema.
 We support **JSON schema Draft V4** with format extension for `date` (YYYY-MM-DD).
 
-If loyalty club's schema is in v2, schema will be mapped to keep old behaviour (title fields + enums).
+Keys explanation:
+
+* `identifiers` [Array of strings] - fields that are set to identify member
+* `languages` [Array of strings] - array of languages set up in loyalty club
+* `default_language` [string] - default language used in loyalty club and also used for mappings to Api v2
+* `version` [string] - version of schema, currently the newest is `v2`
+* `products` [Object] - properties scoping and ordering by product name, default one is `default`
+* `required` [Array of strings] - required properties for member
 
 ### HTTP Request
 
-**GET** `api/v1/loyalty_clubs/:loyalty_club_slug/member_schema`
+**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/member_schema`
 
 Parameter | Description
 --------- | -------
@@ -86,7 +97,7 @@ If msisdn is not valid, then `400 Bad Request` is returned.
 
 ### HTTP Request
 
-**POST** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token`
+**POST** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token`
 
 ### URL Parameters
 
@@ -102,7 +113,7 @@ Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Pri
 ## Check if member exists
 
 ```shell
-curl -I "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn" \
+curl -I "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id" \
   -H "X-Customer-Public-Token: alphanumeric_string" \
   -H "X-Product-Name: custom-product-name"
 ```
@@ -113,19 +124,25 @@ It can be used to check if member is in loyalty club or not.
 
 ### HTTP Request
 
-**HEAD** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**HEAD** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:id`
+
+**HEAD** `api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn`
+
+**HEAD** `api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
 loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
-msisdn | unique member's msisdn as defined by E.164 (described above) Example: `4740485124`.
+id | member's ID.
+msisdn | unique member's msisdn as defined by E.164 (described above). Example: `4740485124`.
+email | unique member's email.
 
 ### Response codes
 
 * **200** - member exists
-* **404 Not found** - member with `msisdn` not found or it is invalid
+* **404 Not found** - member with given identifier not found
 
 <aside class="notice">
 Authentication with <code>X-Customer-Public-Token</code>.
@@ -134,7 +151,7 @@ Authentication with <code>X-Customer-Public-Token</code>.
 ## Get member
 
 ```shell
-curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn" \
+curl "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id" \
   -H "X-Customer-Private-Token: alphanumeric_string" \
   -H "X-Product-Name: custom-product-name"
 ```
@@ -149,15 +166,19 @@ curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:
     "last_name": "Nordmann",
     "birthday": "1990-10-23",
     "interests": [
-      "bikes & cars",
+      "bikes_and_cars",
       "sportwear"
     ],
     "child_birth_years": [
       2010,
       2011,
       2011
-    ]
+    ],
+    "language": "no"
   },
+  "sms_status": "enabled",
+  "email_status": "hard_bounced",
+  "push_status": "disabled",
   "created_at": "2017-01-19T10:07:08.336+01:00",
   "updated_at": "2017-04-03T09:35:19.313+02:00"
 }
@@ -165,31 +186,39 @@ curl "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/members/:
 
 Fetches member's properties.
 
-
 Key | Description | Type
 --------- | ----------- | ---------
 id | Member ID | integer
 properties | Object with member's properties | JSON Object
+properties\['language'\] | Language used by user | string
+consents | [incoming] | JSON Object
+sms_status | Status of sms channel | string
+email_status | Status of email channel | string
+push_status | Status of push channel | string
 created_at | Time when the user was firstly created | string
 updated_at | Time when the user was last updated | string
 
-If loyalty club's schema is in v2, some of properties will be mapped to keep old behaviour.
-
 ### HTTP Request
 
-**GET** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:id`
+
+**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn`
+
+**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
 loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
-msisdn | unique member's msisdn as defined by E.164 (described above) Example: `4740485124`.
+id | member's ID.
+msisdn | unique member's msisdn as defined by E.164 (described above). Example: `4740485124`.
+email | unique member's email.
 
 ### Responses
 
 * **200** - success with member's properties in response body
-* **404 Not found** - member with `msisdn` not found or it is invalid
+* **404 Not found** - member with given identifier not found 
 
 <aside class="notice">
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
@@ -201,32 +230,37 @@ Create member with given properties.
 
 When invalid authentication token is provided response `401 Unauthorized` is returned disregarding whether member exists or not.
 
-If loyalty club's schema is in v2, some of properties will be mapped to keep old behaviour.
-
 ### HTTP Request
 
-**PUT** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**POST** `api/v3/loyalty_clubs/:loyalty_club_slug/members`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
 loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
-msisdn | unique member's msisdn as defined by E.164 (described above) Example: `4740485124`.
+id | member's ID
 
-### PUT (JSON) Parameters
+### POST (JSON) Parameters
 
 Parameter | Description | Type
 --------- | ----------- | ---------
 properties | JSON with properties for member | JSON Object
+properties\['language'\] | Language used by user, if not set then "default_language" is taken from schema | string
 send_welcome_message | If true, SMS welcome message will be send to member | Boolean
 send_email_welcome_message | If true and emails configured in loyalty club, email welcome (verification) message will be send to member | Boolean
+sms_enabled | If true SMS channel will be enabled for member | Boolean
+email_enabled | If true email channel will be enabled for member | Boolean
+push_enabled | If true push channel will be enabled for member | Boolean
+
+<aside class="notice">
+There is possibility to have multiple SMS welcome messages. Sent will be the one that matches Product or default one.
+</aside>
 
 ### Responses
 
 * **200** - success with member's properties in response body
-* **400 Bad request** - `msisdn` is invalid or there are [validation errors](#validation-on-members).
-* **409 Conflict** - member with `msisdn` already exists in loyalty club
+* **400 Bad request** - there are [validation errors](#validation-on-members).
 
 <aside class="notice">
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
@@ -238,30 +272,31 @@ Update member's properties with given ones.
 
 It is intended for partial updates - not given properties are neither deleted nor overwritten.
 
-If loyalty club's schema is in v2, some of properties will be mapped to keep old behaviour.
-
 ### HTTP Request
 
-**PATCH** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+**PATCH** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:id`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
 loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
-msisdn | unique member's msisdn as defined by E.164 (described above) Example: `4740485124`.
+id | member's ID.
 
 ### PATCH (JSON) Parameters
 
 Parameter | Description | Type
 --------- | ----------- | ---------
 properties | JSON with properties for member | JSON Object
+sms_enabled | If true SMS channel will be enabled for member | Boolean
+email_enabled | If true email channel will be enabled for member | Boolean
+push_enabled | If true push channel will be enabled for member | Boolean
 
 ### Responses
 
 * **200** - success with member's properties in response body
-* **400 Bad request** - `msisdn` is invalid or there are [validation errors](#validation-on-members).
-* **404 Not found** - member with `msisdn` not found
+* **400 Bad request** - there are [validation errors](#validation-on-members).
+* **404 Not found** - member with ID was not found
 
 
 <aside class="notice">
@@ -270,30 +305,28 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
 ## Remove member
 
-```shell
-curl -X DELETE -H "X-Customer-Private-Token: alphanumeric_string" \
-     -H "X-Product-Name: custom-product-name" \
-     "https://connect.bstcm.no/api/v1/loyalty_clubs/:loyalty_club_slug/member_schema"
-```
-
-> Successful removal is indicated by response code 200
-
-**DELETE** `api/v2/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
-
 Removes member from loyalty club.
 
 It is possible to trigger optout message by setting `send_unsubscribe_message=true` query string parameter.
 
 ### HTTP Request
 
-**DELETE** `api/v1/loyalty_clubs/:loyalty_club_slug/members/:msisdn`
+```shell
+curl -X DELETE -H "X-Customer-Private-Token: alphanumeric_string" \
+     -H "X-Product-Name: custom-product-name" \
+     "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"
+```
+
+> Successful removal is indicated by response code 200
+
+**DELETE** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:id`
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
 loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
-msisdn | unique member's msisdn as defined by E.164 (described above) Example: `4740485124`.
+id | member's ID.
 
 ### Query Parameters
 
@@ -304,7 +337,7 @@ send_unsubscribe_message | If true, optout message will be send to member. Examp
 ### Responses
 
 * **200** - success with member's properties in response body
-* **404 Not found** - member with `msisdn` not found or it is invalid
+* **404 Not found** - member not found
 
 <aside class="notice">
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
