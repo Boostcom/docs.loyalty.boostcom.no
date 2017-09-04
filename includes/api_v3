@@ -4,6 +4,115 @@
 
 <p>You can use Api V3 only when your customer is migrated to new backend service for data.</p>
 
+<h2 id="authentication-and-authorization-new">Authentication and Authorization (new)</h2>
+
+<p>All of the endpoints require a single authentication header.</p>
+
+<ul>
+<li>for access to member&rsquo;s profile please read <a href="#oauth2-for-members">OAuth2 for members</a>.</li>
+<li><code class="prettyprint">X-Customer-Public-Token</code> is used for endpoints that are not sensitive (not destructive and do not leak any personal data). Currently:
+
+<ul>
+<li>Get schema</li>
+<li>Send token</li>
+<li>Check if member exists</li>
+</ul></li>
+<li><code class="prettyprint">X-Customer-Private-Token</code> can be used for batch operations on any member of the customer&rsquo;s loyalty club.
+It could be used for all operations that allow authentication with <code class="prettyprint">X-Customer-Public-Token</code>.
+It should be used only on backend and never exposed in frontend code.</li>
+</ul>
+
+<p>If you miss your authentication tokens, please <a href="http://boostcom.no">let us know</a>.</p>
+
+<aside class="notice">
+You must use only one header in each request.
+</aside>
+
+<h2 id="oauth2-for-members"><strong>OAuth2 for members</strong></h2>
+
+<h2 id="testing-and-implementation">Testing and implementation</h2>
+
+<p>You can use e.g. this oauth2 client for Ruby: https://github.com/intridea/oauth2</p>
+
+<h2 id="getting-auth-token">Getting Auth Token</h2>
+
+<h3 id="http-request">HTTP request</h3>
+<pre class="highlight shell tab-shell"><code>curl -F <span class="nv">grant_type</span><span class="o">=</span>password <span class="se">\</span>
+-F <span class="nv">msisdn</span><span class="o">=</span>4740012345 <span class="se">\</span>
+-F <span class="nv">password</span><span class="o">=</span>reallyhardpassword <span class="se">\</span>
+-X POST http://localhost:3000/oauth/token
+</code></pre><pre class="highlight shell tab-shell"><code>curl -F <span class="nv">grant_type</span><span class="o">=</span>refresh_token <span class="se">\</span>
+-F <span class="nv">client_id</span><span class="o">=</span>9b36d8c0db59eff5038aea7a417d73e69aea75b41aac771816d2ef1b3109cc2f <span class="se">\</span>
+-F <span class="nv">client_secret</span><span class="o">=</span>d6ea27703957b69939b8104ed4524595e210cd2e79af587744a7eb6e58f5b3d2 <span class="se">\</span>
+-F <span class="nv">refresh_token</span><span class="o">=</span>c65b265611713028344a2c285dfdc4e28f9ce2dbc36b9f7e12f626a3d106a304 <span class="se">\</span>
+-X POST http://localhost:3000/oauth/token
+</code></pre>
+<blockquote>
+<p>When successful, the above commands returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"access_token"</span><span class="p">:</span><span class="s2">"0ddb922452c983a70566e30dce16e2017db335103e35d783874c448862a78168"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"token_type"</span><span class="p">:</span><span class="s2">"bearer"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"expires_in"</span><span class="p">:</span><span class="mi">7200</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"refresh_token"</span><span class="p">:</span><span class="s2">"f2188c4165d912524e04c6496d10f06803cc08ed50271a0b0a73061e3ac1c06c"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"scope"</span><span class="p">:</span><span class="s2">"public"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>POST</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/oauth/token</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>loyalty_club_slug</td>
+<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
+</tr>
+</tbody></table>
+
+<h3 id="post-json-parameters">POST (JSON) Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>grant_type</td>
+<td>type of grant (e.g. <code class="prettyprint">password</code> or <code class="prettyprint">refresh_token</code>)</td>
+</tr>
+<tr>
+<td>&lsquo;identifier&rsquo; (e.g. <code class="prettyprint">email</code> or <code class="prettyprint">msisdn</code>)</td>
+<td>identifier of member</td>
+</tr>
+<tr>
+<td>password</td>
+<td>member password while using <code class="prettyprint">password</code> grant_type</td>
+</tr>
+<tr>
+<td>client_id</td>
+<td>client id while using <code class="prettyprint">refresh_token</code> grant_type</td>
+</tr>
+<tr>
+<td>client_secret</td>
+<td>client secret while using <code class="prettyprint">refresh_token</code> grant_type</td>
+</tr>
+<tr>
+<td>refresh_token</td>
+<td>refresh token while using <code class="prettyprint">refresh_token</code> grant_type</td>
+</tr>
+</tbody></table>
+
+<h2 id="authorizing-with-access_token">Authorizing with access_token</h2>
+
+<p>Add to your request <code class="prettyprint">Authorization</code> header with value: <code class="prettyprint">&quot;Bearer &quot;</code> + <code class="prettyprint">access_token</code>
+or add it to query params, e.g. <code class="prettyprint">http://something.pl/anyurl?access_token=fe087c17dd15a84b3c939fbbbd1bbfd196d7ea28cfafbf1d6f15a6c74822ef30</code>.</p>
+
 <h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
   -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
