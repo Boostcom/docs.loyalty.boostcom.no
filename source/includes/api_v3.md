@@ -4,6 +4,86 @@
 
 You can use Api V3 only when your customer is migrated to new backend service for data.
 
+## Authentication and Authorization (new)
+
+All of the endpoints require a single authentication header.
+
+* for access to member's profile please read [OAuth2 for members](#oauth2-for-members).
+* `X-Customer-Public-Token` is used for endpoints that are not sensitive (not destructive and do not leak any personal data). Currently:
+    + Get schema
+    + Send token
+    + Check if member exists
+* `X-Customer-Private-Token` can be used for batch operations on any member of the customer's loyalty club.
+It could be used for all operations that allow authentication with `X-Customer-Public-Token`.
+It should be used only on backend and never exposed in frontend code.
+
+If you miss your authentication tokens, please [let us know](http://boostcom.no).
+
+<aside class="notice">
+You must use only one header in each request.
+</aside>
+
+## **OAuth2 for members**
+
+## Testing and implementation
+
+You can use e.g. this oauth2 client for Ruby: https://github.com/intridea/oauth2
+
+## Getting Auth Token
+
+### HTTP request
+
+```shell
+curl -F grant_type=password \
+-F msisdn=4740012345 \
+-F password=reallyhardpassword \
+-X POST http://localhost:3000/oauth/token
+```
+
+```shell
+curl -F grant_type=refresh_token \
+-F client_id=9b36d8c0db59eff5038aea7a417d73e69aea75b41aac771816d2ef1b3109cc2f \
+-F client_secret=d6ea27703957b69939b8104ed4524595e210cd2e79af587744a7eb6e58f5b3d2 \
+-F refresh_token=c65b265611713028344a2c285dfdc4e28f9ce2dbc36b9f7e12f626a3d106a304 \
+-X POST http://localhost:3000/oauth/token
+```
+
+> When successful, the above commands returns JSON structured like this:
+
+```json
+{
+  "access_token":"0ddb922452c983a70566e30dce16e2017db335103e35d783874c448862a78168",
+  "token_type":"bearer",
+  "expires_in":7200,
+  "refresh_token":"f2188c4165d912524e04c6496d10f06803cc08ed50271a0b0a73061e3ac1c06c",
+  "scope":"public"
+}
+```
+
+**POST** `api/v3/loyalty_clubs/:loyalty_club_slug/members/oauth/token`
+
+### URL Parameters
+
+Parameter | Description
+--------- | -------
+loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
+
+### POST (JSON) Parameters
+
+Parameter | Description
+--------- | -------
+grant_type | type of grant (e.g. `password` or `refresh_token`)
+'identifier' (e.g. `email` or `msisdn`) | identifier of member 
+password | member password while using `password` grant_type
+client_id | client id while using `refresh_token` grant_type
+client_secret | client secret while using `refresh_token` grant_type
+refresh_token | refresh token while using `refresh_token` grant_type
+
+## Authorizing with access_token
+
+Add to your request `Authorization` header with value: `"Bearer "` + `access_token`
+or add it to query params, e.g. `http://something.pl/anyurl?access_token=fe087c17dd15a84b3c939fbbbd1bbfd196d7ea28cfafbf1d6f15a6c74822ef30`.
+
 ## Get loyalty club's schema
 
 ```shell
