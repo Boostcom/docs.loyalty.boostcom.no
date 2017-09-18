@@ -2,6 +2,44 @@
 
 <p>You can use Api V2 fully, only when your schema is ready to support it.</p>
 
+<h2 id="authentication">Authentication</h2>
+
+<p>All of the endpoints require a single authentication header.</p>
+
+<ul>
+<li><code class="prettyprint">X-Member-Token</code> represents SMS pass code sent to the member and allows to manage his own profile only. To trigger that SMS use <code class="prettyprint">/send_token</code> call.</li>
+<li><code class="prettyprint">X-Customer-Public-Token</code> is used for endpoints that are not sensitive (not destructive and do not leak any personal data). Currently:
+
+<ul>
+<li>Get schema</li>
+<li>Send token</li>
+<li>Check if member exists</li>
+</ul></li>
+<li><code class="prettyprint">X-Customer-Private-Token</code> can be used for batch operations on any member of the customer&rsquo;s loyalty club.
+It could be used for all operations that allow authentication with <code class="prettyprint">X-Customer-Public-Token</code>.
+It should be used only on backend and never exposed in frontend code.</li>
+</ul>
+
+<p>If you miss your authentication tokens, please <a href="http://boostcom.no">let us know</a>.</p>
+
+<aside class="notice">
+You must use only one header in each request.
+</aside>
+
+<h2 id="product-name">Product name</h2>
+
+<p>Each system that is communicating with us should uniquely identify itself so it is possible to distinguish optin/update channels.
+That will allow further targeting members by communication channel.
+For that we use product name and header <code class="prettyprint">X-Product-Name</code> is intended to provide the necessary granularity.</p>
+
+<p>If you miss your product name, please <a href="http://boostcom.no">let us know</a>.</p>
+
+<aside class="warning">
+Product Name header is required in each request!
+<br>
+When it is missing or it has incorrect value, then <code>401 Unauthorized</code> HTTP code and empty response body are returned.
+</aside>
+
 <h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v2/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
   -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>

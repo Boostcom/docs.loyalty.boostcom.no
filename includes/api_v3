@@ -4,39 +4,71 @@
 
 <p>You can use Api V3 only when your customer is migrated to new backend service for data.</p>
 
-<h2 id="authentication-and-authorization-new">Authentication and Authorization (new)</h2>
+<h2 id="product-name">Product name</h2>
 
-<p>All of the endpoints require a single authentication header.</p>
+<p>Each system that is communicating with us should uniquely identify itself so it is possible to distinguish optin/update channels.
+That will allow further targeting members by communication channel.
+For that we use product name and header <code class="prettyprint">X-Product-Name</code> is intended to provide the necessary granularity.</p>
 
-<ul>
-<li>for access to member&rsquo;s profile please read <a href="#oauth2-for-members">OAuth2 for members</a>.</li>
-<li><code class="prettyprint">X-Customer-Public-Token</code> is used for endpoints that are not sensitive (not destructive and do not leak any personal data). Currently:
+<p>If you miss your product name, please <a href="http://boostcom.no">let us know</a>.</p>
 
-<ul>
-<li>Get schema</li>
-<li>Send token</li>
-<li>Check if member exists</li>
-</ul></li>
-<li><code class="prettyprint">X-Customer-Private-Token</code> can be used for batch operations on any member of the customer&rsquo;s loyalty club.
-It could be used for all operations that allow authentication with <code class="prettyprint">X-Customer-Public-Token</code>.
-It should be used only on backend and never exposed in frontend code.</li>
-</ul>
+<h2 id="client-authentication-and-authorization-new">Client Authentication and Authorization (new)</h2>
+
+<p>All of the endpoints require a client authorization header - <code class="prettyprint">X-Authorization-Token</code>.</p>
+
+<p>It should be used only on backend and never exposed in frontend code.</p>
+
+<p>There are permits assigned to the token. Depending what permits are assigned, access to some of the endpoints
+may be restricted.</p>
 
 <p>If you miss your authentication tokens, please <a href="http://boostcom.no">let us know</a>.</p>
 
-<aside class="notice">
-You must use only one header in each request.
-</aside>
+<h2 id="x-user-agent-header">X-User-Agent header</h2>
+
+<p>As single <code class="prettyprint">X-Authorization-Token</code> may be common for multiple clients, <code class="prettyprint">X-User-Agent</code> is required to identify client
+for information purposes and debugging so we better know who uses the service.</p>
+
+<p>It should be arbitrary chosen to represent client specifics (e.g. &lsquo;SuperMall Android App&rsquo; or &lsquo;SuperMall backend users service&rsquo;)</p>
+
+<h2 id="common-http-errors">Common HTTP errors</h2>
+
+<table><thead>
+<tr>
+<th>Error</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">400 (Bad Request)</code></td>
+<td>Some of required headers is missing</td>
+</tr>
+<tr>
+<td><code class="prettyprint">401 (Unauthorized)</code></td>
+<td><code class="prettyprint">X-Authorization-Token</code> is invalid (or doesn&rsquo;t match provided loyalty club or product)</td>
+</tr>
+<tr>
+<td><code class="prettyprint">403 (Forbidden)</code></td>
+<td>Not authorized to perform this action (no permit)</td>
+</tr>
+<tr>
+<td><code class="prettyprint">404 (Not Found)</code></td>
+<td>The requested resource doesn&rsquo;t exist</td>
+</tr>
+<tr>
+<td><code class="prettyprint">422 (Unprocessable Entity)</code></td>
+<td>Invalid params are provided (e.g. incorrect properties on member creation)</td>
+</tr>
+</tbody></table>
 
 <h2 id="oauth2-for-members"><strong>OAuth2 for members</strong></h2>
 
-<h2 id="testing-and-implementation">Testing and implementation</h2>
+<h3 id="testing-and-implementation">Testing and implementation</h3>
 
 <p>You can use e.g. this oauth2 client for Ruby: https://github.com/intridea/oauth2</p>
 
-<h2 id="getting-auth-token">Getting Auth Token</h2>
+<h3 id="getting-auth-token">Getting Auth Token</h3>
 
-<h3 id="http-request">HTTP request</h3>
+<h4 id="http-request">HTTP request</h4>
 <pre class="highlight shell tab-shell"><code>curl -F <span class="nv">grant_type</span><span class="o">=</span>password <span class="se">\</span>
 -F <span class="nv">msisdn</span><span class="o">=</span>4740012345 <span class="se">\</span>
 -F <span class="nv">password</span><span class="o">=</span>reallyhardpassword <span class="se">\</span>
@@ -60,7 +92,7 @@ You must use only one header in each request.
 </span></code></pre>
 <p><strong>POST</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/oauth/token</code></p>
 
-<h3 id="url-parameters">URL Parameters</h3>
+<h4 id="url-parameters">URL Parameters</h4>
 
 <table><thead>
 <tr>
@@ -74,7 +106,7 @@ You must use only one header in each request.
 </tr>
 </tbody></table>
 
-<h3 id="post-json-parameters">POST (JSON) Parameters</h3>
+<h4 id="post-json-parameters">POST (JSON) Parameters</h4>
 
 <table><thead>
 <tr>
@@ -108,15 +140,16 @@ You must use only one header in each request.
 </tr>
 </tbody></table>
 
-<h2 id="authorizing-with-access_token">Authorizing with access_token</h2>
+<h3 id="authorizing-with-access_token">Authorizing with access_token</h3>
 
 <p>Add to your request <code class="prettyprint">Authorization</code> header with value: <code class="prettyprint">&quot;Bearer &quot;</code> + <code class="prettyprint">access_token</code>
 or add it to query params, e.g. <code class="prettyprint">http://something.pl/anyurl?access_token=fe087c17dd15a84b3c939fbbbd1bbfd196d7ea28cfafbf1d6f15a6c74822ef30</code>.</p>
 
 <h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
-  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
-  -H <span class="s2">"X-Product-Name: custom-product-name"</span>
+  -H <span class="s2">"X-Authorization-Token: alphanumeric_string"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\ </span>
+  -H <span class="s2">"X-User-Agent: CURL manual test"</span>
 </code></pre>
 <blockquote>
 <p>When successful, the above command returns JSON structured like this:</p>
@@ -194,7 +227,7 @@ We support <strong>JSON schema Draft V4</strong> with format extension for <code
 </tbody></table>
 
 <aside class="notice">
-Authentication only with <code>X-Customer-Public-Token</code>.
+Authentication only with <code>X-Authorization-Token</code>.
 </aside>
 
 <h2 id="send-member-token">Send member token</h2>
@@ -233,27 +266,31 @@ That <strong>member token</strong> could be used to authenticate <em>Create Memb
 </tbody></table>
 
 <aside class="notice">
-Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Private-Token</code>.
+Authentication with <code>X-Authorization-Token</code> or <code>X-Customer-Private-Token</code>.
 </aside>
 
 <h2 id="check-if-member-exists">Check if member exists</h2>
 <pre class="highlight shell tab-shell"><code>curl -I <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span> <span class="se">\</span>
-  -H <span class="s2">"X-Customer-Public-Token: alphanumeric_string"</span> <span class="se">\</span>
-  -H <span class="s2">"X-Product-Name: custom-product-name"</span>
+  -H <span class="s2">"X-Authorization-Token: alphanumeric_string"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\ </span>
+  -H <span class="s2">"X-User-Agent: CURL manual test"</span>
 </code></pre>
 <blockquote>
-<p>Response will be 200 or 404 code.</p>
+<p>Returns hash consisting of just one property: :exists</p>
 </blockquote>
-
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"exists"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">If</span><span class="w"> </span><span class="err">exists</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="err">.</span><span class="w"> </span><span class="err">If</span><span class="w"> </span><span class="err">not</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="err">.</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <p>It can be used to check if member is in loyalty club or not.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>HEAD</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id/check_existence</code></p>
 
-<p><strong>HEAD</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn/check_existence</code></p>
 
-<p><strong>HEAD</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/check_existence</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -281,21 +318,21 @@ Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Pri
 </tr>
 </tbody></table>
 
-<h3 id="response-codes">Response codes</h3>
+<h3 id="response-code">Response code</h3>
 
 <ul>
-<li><strong>200</strong> - member exists</li>
-<li><strong>404 Not found</strong> - member with given identifier not found</li>
+<li><strong>200</strong> </li>
 </ul>
 
 <aside class="notice">
-Authentication with <code>X-Customer-Public-Token</code>.
+Requires &lsquo;BL:Api:Members:Check&rsquo; permit
 </aside>
 
 <h2 id="get-member">Get member</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span> <span class="se">\</span>
-  -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span> <span class="se">\</span>
-  -H <span class="s2">"X-Product-Name: custom-product-name"</span>
+  -H <span class="s2">"X-Authorization-Token: alphanumeric_string"</span> <span class="se">\</span>
+  -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\ </span>
+  -H <span class="s2">"X-User-Agent: CURL manual test"</span>
 </code></pre>
 <blockquote>
 <p>When successful, the above command returns JSON structured like this:</p>
@@ -422,7 +459,7 @@ Authentication with <code>X-Customer-Public-Token</code>.
 </ul>
 
 <aside class="notice">
-Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
+Requires &lsquo;BL:Api:Members:Get&rsquo; permit
 </aside>
 
 <h2 id="create-member">Create member</h2>
@@ -592,8 +629,9 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 <p>It is possible to trigger optout message by setting <code class="prettyprint">send_unsubscribe_message=true</code> query string parameter.</p>
 
 <h3 id="http-request">HTTP Request</h3>
-<pre class="highlight shell tab-shell"><code>curl -X DELETE -H <span class="s2">"X-Customer-Private-Token: alphanumeric_string"</span> <span class="se">\</span>
+<pre class="highlight shell tab-shell"><code>curl -X DELETE -H <span class="s2">"X-Authorization-Token: alphanumeric_string"</span> <span class="se">\</span>
      -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\</span>
+     -H <span class="s2">"X-User-Agent: CURL manual test"</span> <span class="se">\</span>
      <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span>
 </code></pre>
 <blockquote>
