@@ -4,34 +4,51 @@
 
 You can use Api V3 only when your customer is migrated to new backend service for data.
 
-## Authentication and Authorization (new)
+## Product name
 
-All of the endpoints require a single authentication header.
+Each system that is communicating with us should uniquely identify itself so it is possible to distinguish optin/update channels.
+That will allow further targeting members by communication channel.
+For that we use product name and header `X-Product-Name` is intended to provide the necessary granularity.
 
-* for access to member's profile please read [OAuth2 for members](#oauth2-for-members).
-* `X-Customer-Public-Token` is used for endpoints that are not sensitive (not destructive and do not leak any personal data). Currently:
-    + Get schema
-    + Send token
-    + Check if member exists
-* `X-Customer-Private-Token` can be used for batch operations on any member of the customer's loyalty club.
-It could be used for all operations that allow authentication with `X-Customer-Public-Token`.
+If you miss your product name, please [let us know](http://boostcom.no).
+
+## Client Authentication and Authorization (new)
+
+All of the endpoints require a client authorization header - `X-Authorization-Token`.
+
 It should be used only on backend and never exposed in frontend code.
+
+There are permits assigned to the token. Depending what permits are assigned, access to some of the endpoints
+may be restricted.
 
 If you miss your authentication tokens, please [let us know](http://boostcom.no).
 
-<aside class="notice">
-You must use only one header in each request.
-</aside>
+## X-User-Agent header
+ 
+As single `X-Authorization-Token` may be common for multiple clients, `X-User-Agent` is required to identify client
+for information purposes and debugging so we better know who uses the service.
+
+It should be arbitrary chosen to represent client specifics (e.g. 'SuperMall Android App' or 'SuperMall backend users service')
+
+## Common HTTP errors
+
+Error | Reason
+-------|------------
+`400 (Bad Request)` | Some of required headers is missing
+`401 (Unauthorized)` | `X-Authorization-Token` is invalid (or doesn't match provided loyalty club or product)
+`403 (Forbidden)` | Not authorized to perform this action (no permit)
+`404 (Not Found)` | The requested resource doesn't exist
+`422 (Unprocessable Entity)` | Invalid params are provided (e.g. incorrect properties on member creation)
 
 ## **OAuth2 for members**
 
-## Testing and implementation
+### Testing and implementation
 
 You can use e.g. this oauth2 client for Ruby: https://github.com/intridea/oauth2
 
-## Getting Auth Token
+### Getting Auth Token
 
-### HTTP request
+#### HTTP request
 
 ```shell
 curl -F grant_type=password \
@@ -62,13 +79,13 @@ curl -F grant_type=refresh_token \
 
 **POST** `api/v3/loyalty_clubs/:loyalty_club_slug/members/oauth/token`
 
-### URL Parameters
+#### URL Parameters
 
 Parameter | Description
 --------- | -------
 loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
 
-### POST (JSON) Parameters
+#### POST (JSON) Parameters
 
 Parameter | Description
 --------- | -------
@@ -79,7 +96,7 @@ client_id | client id while using `refresh_token` grant_type
 client_secret | client secret while using `refresh_token` grant_type
 refresh_token | refresh token while using `refresh_token` grant_type
 
-## Authorizing with access_token
+### Authorizing with access_token
 
 Add to your request `Authorization` header with value: `"Bearer "` + `access_token`
 or add it to query params, e.g. `http://something.pl/anyurl?access_token=fe087c17dd15a84b3c939fbbbd1bbfd196d7ea28cfafbf1d6f15a6c74822ef30`.
@@ -88,8 +105,9 @@ or add it to query params, e.g. `http://something.pl/anyurl?access_token=fe087c1
 
 ```shell
 curl "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/member_schema" \
-  -H "X-Customer-Public-Token: alphanumeric_string" \
-  -H "X-Product-Name: custom-product-name"
+  -H "X-Authorization-Token: alphanumeric_string" \
+  -H "X-Product-Name: custom-product-name" \ 
+  -H "X-User-Agent: CURL manual test"
 ```
 
 > When successful, the above command returns JSON structured like this:
@@ -159,7 +177,7 @@ Parameter | Description
 loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
 
 <aside class="notice">
-Authentication only with <code>X-Customer-Public-Token</code>.
+Authentication only with <code>X-Authorization-Token</code>.
 </aside>
 
 ## Send member token
@@ -187,28 +205,35 @@ loyalty_club_slug | unique slugified name of the loyalty club. Example: `booster
 msisdn | unique member's msisdn as defined by E.164 (described above) Example: `4740485124`.
 
 <aside class="notice">
-Authentication with <code>X-Customer-Public-Token</code> or <code>X-Customer-Private-Token</code>.
+Authentication with <code>X-Authorization-Token</code> or <code>X-Customer-Private-Token</code>.
 </aside>
 
 ## Check if member exists
 
 ```shell
 curl -I "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id" \
-  -H "X-Customer-Public-Token: alphanumeric_string" \
-  -H "X-Product-Name: custom-product-name"
+  -H "X-Authorization-Token: alphanumeric_string" \
+  -H "X-Product-Name: custom-product-name" \ 
+  -H "X-User-Agent: CURL manual test"
 ```
 
-> Response will be 200 or 404 code.
+> Returns hash consisting of just one property: :exists
+
+```json
+{
+  "exists": true // If exists, true. If not, false.
+}
+```
 
 It can be used to check if member is in loyalty club or not.
 
 ### HTTP Request
 
-**HEAD** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:id`
+**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:id/check_existence`
 
-**HEAD** `api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn`
+**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn/check_existence`
 
-**HEAD** `api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email`
+**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/check_existence`
 
 ### URL Parameters
 
@@ -219,21 +244,21 @@ id | member's ID.
 msisdn | unique member's msisdn as defined by E.164 (described above). Example: `4740485124`.
 email | unique member's email.
 
-### Response codes
+### Response code
 
-* **200** - member exists
-* **404 Not found** - member with given identifier not found
+* **200** 
 
 <aside class="notice">
-Authentication with <code>X-Customer-Public-Token</code>.
+Requires 'BL:Api:Members:Check' permit
 </aside>
 
 ## Get member
 
 ```shell
 curl "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id" \
-  -H "X-Customer-Private-Token: alphanumeric_string" \
-  -H "X-Product-Name: custom-product-name"
+  -H "X-Authorization-Token: alphanumeric_string" \
+  -H "X-Product-Name: custom-product-name" \ 
+  -H "X-User-Agent: CURL manual test"
 ```
 
 > When successful, the above command returns JSON structured like this:
@@ -301,7 +326,7 @@ email | unique member's email.
 * **404 Not found** - member with given identifier not found 
 
 <aside class="notice">
-Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
+Requires 'BL:Api:Members:Get' permit
 </aside>
 
 ## Create member
@@ -392,8 +417,9 @@ It is possible to trigger optout message by setting `send_unsubscribe_message=tr
 ### HTTP Request
 
 ```shell
-curl -X DELETE -H "X-Customer-Private-Token: alphanumeric_string" \
+curl -X DELETE -H "X-Authorization-Token: alphanumeric_string" \
      -H "X-Product-Name: custom-product-name" \
+     -H "X-User-Agent: CURL manual test" \
      "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"
 ```
 

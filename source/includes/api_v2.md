@@ -2,6 +2,39 @@
 
 You can use Api V2 fully, only when your schema is ready to support it.
 
+## Authentication
+
+All of the endpoints require a single authentication header.
+
+* `X-Member-Token` represents SMS pass code sent to the member and allows to manage his own profile only. To trigger that SMS use `/send_token` call.
+* `X-Customer-Public-Token` is used for endpoints that are not sensitive (not destructive and do not leak any personal data). Currently:
+    + Get schema
+    + Send token
+    + Check if member exists
+* `X-Customer-Private-Token` can be used for batch operations on any member of the customer's loyalty club.
+It could be used for all operations that allow authentication with `X-Customer-Public-Token`.
+It should be used only on backend and never exposed in frontend code.
+
+If you miss your authentication tokens, please [let us know](http://boostcom.no).
+
+<aside class="notice">
+You must use only one header in each request.
+</aside>
+
+## Product name
+
+Each system that is communicating with us should uniquely identify itself so it is possible to distinguish optin/update channels.
+That will allow further targeting members by communication channel.
+For that we use product name and header `X-Product-Name` is intended to provide the necessary granularity.
+
+If you miss your product name, please [let us know](http://boostcom.no).
+
+<aside class="warning">
+Product Name header is required in each request!
+<br>
+When it is missing or it has incorrect value, then <code>401 Unauthorized</code> HTTP code and empty response body are returned.
+</aside>
+
 ## Get loyalty club's schema
 
 ```shell
