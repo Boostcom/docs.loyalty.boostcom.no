@@ -333,8 +333,6 @@ Requires 'BL:Api:Members:Get' permit
 
 Create member with given properties.
 
-When invalid authentication token is provided response `401 Unauthorized` is returned disregarding whether member exists or not.
-
 ### HTTP Request
 
 **POST** `api/v3/loyalty_clubs/:loyalty_club_slug/members`
@@ -344,31 +342,30 @@ When invalid authentication token is provided response `401 Unauthorized` is ret
 Parameter | Description
 --------- | -----------
 loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
-id | member's ID
 
 ### POST (JSON) Parameters
 
 Parameter | Description | Type
 --------- | ----------- | ---------
 properties | JSON with properties for member | JSON Object
-properties\['language'\] | Language used by user, if not set then "default_language" is taken from schema | string
-send_welcome_message | If true, SMS welcome message will be send to member | Boolean
+properties\['language'\] | Language used by user - if not set, then "default_language" is taken from schema | string
+send_welcome_message | If true, SMS welcome message will be sent to member | Boolean
 send_email_welcome_message | If true and emails configured in loyalty club, email welcome (verification) message will be send to member | Boolean
 sms_enabled | If true SMS channel will be enabled for member | Boolean
 email_enabled | If true email channel will be enabled for member | Boolean
 push_enabled | If true push channel will be enabled for member | Boolean
 
 <aside class="notice">
-There is possibility to have multiple SMS welcome messages. Sent will be the one that matches Product or default one.
+There is a possibility to have multiple SMS welcome messages. The one that matches Product or default one will be sent.
 </aside>
 
 ### Responses
 
 * **200** - success with member's properties in response body
-* **400 Bad request** - there are [validation errors](#validation-on-members).
+* **422 Bad request** - there are [validation errors](#validation-on-members).
 
 <aside class="notice">
-Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
+Requires 'BL:Api:Members:Create' permit
 </aside>
 
 ## Update member
