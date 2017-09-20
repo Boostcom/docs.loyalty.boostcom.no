@@ -105,9 +105,10 @@ or add it to query params, e.g. `http://something.pl/anyurl?access_token=fe087c1
 
 ```shell
 curl "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/member_schema" \
-  -H "X-Authorization-Token: alphanumeric_string" \
-  -H "X-Product-Name: custom-product-name" \ 
-  -H "X-User-Agent: CURL manual test"
+  -H 'Content-Type: application/json' \
+  -H 'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM' \
+  -H 'X-Product-Name: default' \
+  -H 'X-User-Agent: CURL manual test'
 ```
 
 > When successful, the above command returns JSON structured like this:
@@ -202,7 +203,7 @@ If msisdn is not valid, then `400 Bad Request` is returned.
 Parameter | Description
 --------- | -----------
 loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
-msisdn | unique member's msisdn as defined by E.164 (described above) Example: `4740485124`.
+msisdn | unique member's msisdn as defined [here](#msisdn-member-identifier)) Example: `4740485124`.
 
 <aside class="notice">
 Authentication with <code>X-Authorization-Token</code> or <code>X-Customer-Private-Token</code>.
@@ -212,9 +213,10 @@ Authentication with <code>X-Authorization-Token</code> or <code>X-Customer-Priva
 
 ```shell
 curl -I "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id" \
-  -H "X-Authorization-Token: alphanumeric_string" \
-  -H "X-Product-Name: custom-product-name" \ 
-  -H "X-User-Agent: CURL manual test"
+  -H 'Content-Type: application/json' \
+  -H 'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM' \
+  -H 'X-Product-Name: default' \
+  -H 'X-User-Agent: CURL manual test'
 ```
 
 > Returns hash consisting of just one property: :exists
@@ -241,7 +243,7 @@ Parameter | Description
 --------- | -----------
 loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
 id | member's ID.
-msisdn | unique member's msisdn as defined by E.164 (described above). Example: `4740485124`.
+msisdn | unique member's msisdn as defined [here](#msisdn-member-identifier)) Example: `4740485124`.
 email | unique member's email.
 
 ### Response code
@@ -256,9 +258,10 @@ Requires 'BL:Api:Members:Check' permit
 
 ```shell
 curl "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id" \
-  -H "X-Authorization-Token: alphanumeric_string" \
-  -H "X-Product-Name: custom-product-name" \ 
-  -H "X-User-Agent: CURL manual test"
+  -H 'Content-Type: application/json' \
+  -H 'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM' \
+  -H 'X-Product-Name: default' \
+  -H 'X-User-Agent: CURL manual test'
 ```
 
 > When successful, the above command returns JSON structured like this:
@@ -317,7 +320,7 @@ Parameter | Description
 --------- | -----------
 loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
 id | member's ID.
-msisdn | unique member's msisdn as defined by E.164 (described above). Example: `4740485124`.
+msisdn | unique member's msisdn as defined [here](#msisdn-member-identifier)) Example: `4740485124`.
 email | unique member's email.
 
 ### Responses
@@ -331,7 +334,51 @@ Requires 'BL:Api:Members:Get' permit
 
 ## Create member
 
+```shell
+
+curl -X POST \
+  https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members \
+  -H 'Content-Type: application/json' \
+  -H 'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM' \
+  -H 'X-Product-Name: default' \
+  -H 'X-User-Agent: CURL manual test' \
+  -d '{
+	"properties": {
+		"email": "dev+6@test.com",
+		"msisdn": "4740485124",
+		"first_name": "THe",
+		"last_name": "Doge"
+	},
+	"send_welcome_message": false
+}'
+
+```
+
+> When successful, the above command returns JSON as depicted in "Get member" section
+
+> When payload is invalid, validation errors like this are returned:
+
+```json
+{
+    "email": [
+        {
+        
+            "property": "email",
+            "error": "duplicated_email_in_community",
+        }
+    ]
+}
+```
+
 Create member with given properties.
+
+Available properties and their validation rules are defined by Loyalty Club schema (see: [Get loyalty's club schema](#get-loyalty-clubs-schema34)).
+
+Actual welcome messages sending depends on Loyalty Club and Product configuration.
+For example, even if send_email_welcome_message:true param is provided, message may not be sent because either Product 
+or Loyalty has disabled welcome messages or Loyalty Club has no e-mails configured at all.
+
+There is also a possibility to have multiple SMS welcome messages sent. The one that matches Product or default one will be sent.
 
 ### HTTP Request
 
@@ -345,24 +392,24 @@ loyalty_club_slug | unique slugified name of the loyalty club. Example: `booster
 
 ### POST (JSON) Parameters
 
-Parameter | Description | Type
---------- | ----------- | ---------
-properties | JSON with properties for member | JSON Object
-properties\['language'\] | Language used by user - if not set, then "default_language" is taken from schema | string
-send_welcome_message | If true, SMS welcome message will be sent to member | Boolean
-send_email_welcome_message | If true and emails configured in loyalty club, email welcome (verification) message will be send to member | Boolean
-sms_enabled | If true SMS channel will be enabled for member | Boolean
-email_enabled | If true email channel will be enabled for member | Boolean
-push_enabled | If true push channel will be enabled for member | Boolean
+Parameter | Required? | Default | Description | Type
+--------- | ----------- | ----------- | --------- | -----------
+properties | **yes** | none | JSON with properties for member | JSON Object
+properties\['language'\] | no | "default_language" from schema | Language used by user | string
+properties\['msisdn'\] | yes* | none | Unique member's msisdn as defined [here](#msisdn-member-identifier)) Example: `4740485124`.| string
+properties\['email'\] | yes* | none | Member's email | string
+sms_enabled | no | true | Should SMS channel be enabled for member? | Boolean
+email_enabled | no | true | Should email channel be enabled for member? | Boolean
+push_enabled | no | true | Should push channel will be enabled for member? | Boolean
+send_welcome_message | no | true | Should SMS welcome message be sent to member? | Boolean
+send_email_welcome_message | no | true | Should email welcome be sent to member | Boolean
 
-<aside class="notice">
-There is a possibility to have multiple SMS welcome messages. The one that matches Product or default one will be sent.
-</aside>
+&ast; At least one of those properties must be provided
 
 ### Responses
 
-* **200** - success with member's properties in response body
-* **422 Bad request** - there are [validation errors](#validation-on-members).
+* **200** - Created member JSON object
+* **422 Bad request** - [validation errors](#validation-on-members) JSON object.
 
 <aside class="notice">
 Requires 'BL:Api:Members:Create' permit
@@ -414,10 +461,12 @@ It is possible to trigger optout message by setting `send_unsubscribe_message=tr
 ### HTTP Request
 
 ```shell
-curl -X DELETE -H "X-Authorization-Token: alphanumeric_string" \
-     -H "X-Product-Name: custom-product-name" \
-     -H "X-User-Agent: CURL manual test" \
-     "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"
+curl -X DELETE \
+    "https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id" \
+    -H 'Content-Type: application/json' \
+    -H 'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM' \
+    -H 'X-Product-Name: default' \
+    -H 'X-User-Agent: CURL manual test'
 ```
 
 > Successful removal is indicated by response code 200
