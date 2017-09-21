@@ -435,7 +435,13 @@ curl -X PUT \
 
 > When successful, the above command returns JSON as depicted in "Get member" section
 
-> When payload is invalid, validation errors are returned as depicted in "Create member" section
+> When payload is invalid, validation errors like this are returned:
+
+Update member's properties with given ones.
+
+It is intended for partial updates - not given properties are neither deleted nor overwritten.
+
+If deleting attribute is is intended, its value should be set to `null`.
 
 ### HTTP Request
 
