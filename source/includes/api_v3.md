@@ -401,7 +401,7 @@ properties\['email'\] | yes* | none | Member's email | string
 sms_enabled | no | true | Should SMS channel be enabled for member? | Boolean
 email_enabled | no | true | Should email channel be enabled for member? | Boolean
 push_enabled | no | true | Should push channel will be enabled for member? | Boolean
-send_welcome_message | no | true | Should SMS welcome message be sent to member? | Boolean
+send_sms_welcome_message | no | true | Should SMS welcome message be sent to member? | Boolean
 send_email_welcome_message | no | true | Should email welcome be sent to member | Boolean
 
 &ast; At least one of those properties must be provided
@@ -409,7 +409,7 @@ send_email_welcome_message | no | true | Should email welcome be sent to member 
 ### Responses
 
 * **200** - Created member JSON object
-* **422 Bad request** - [validation errors](#validation-on-members) JSON object.
+* **422 Unprocessable entity** - [validation errors](#validation-on-members) JSON object.
 
 <aside class="notice">
 Requires 'BL:Api:Members:Create' permit
@@ -417,13 +417,29 @@ Requires 'BL:Api:Members:Create' permit
 
 ## Update member
 
-Update member's properties with given ones.
+```shell
 
-It is intended for partial updates - not given properties are neither deleted nor overwritten.
+curl -X PUT \
+  https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id \
+  -H 'Content-Type: application/json' \
+  -H 'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM' \
+  -H 'X-Product-Name: default' \
+  -H 'X-User-Agent: CURL manual test' \
+  -d '{
+	"properties": {
+		"last_name": "Doge"
+	}
+}'
+
+```
+
+> When successful, the above command returns JSON as depicted in "Get member" section
+
+> When payload is invalid, validation errors are returned as depicted in "Create member" section
 
 ### HTTP Request
 
-**PATCH** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:id`
+**PUT** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:id`
 
 ### URL Parameters
 
@@ -443,13 +459,12 @@ push_enabled | If true push channel will be enabled for member | Boolean
 
 ### Responses
 
-* **200** - success with member's properties in response body
-* **400 Bad request** - there are [validation errors](#validation-on-members).
+* **200** - Created member JSON object
 * **404 Not found** - member with ID was not found
-
+* **422 Unprocessable entity** - [validation errors](#validation-on-members) JSON object.
 
 <aside class="notice">
-Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
+Requires 'BL:Api:Members:Update' permit
 </aside>
 
 ## Remove member
