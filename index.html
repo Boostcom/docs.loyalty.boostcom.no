@@ -1587,9 +1587,10 @@ or add it to query params, e.g. <code class="prettyprint">http://something.pl/an
 
 <h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
-  -H <span class="s2">"X-Authorization-Token: alphanumeric_string"</span> <span class="se">\</span>
-  -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\ </span>
-  -H <span class="s2">"X-User-Agent: CURL manual test"</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
 </code></pre>
 <blockquote>
 <p>When successful, the above command returns JSON structured like this:</p>
@@ -1701,7 +1702,7 @@ That <strong>member token</strong> could be used to authenticate <em>Create Memb
 </tr>
 <tr>
 <td>msisdn</td>
-<td>unique member&rsquo;s msisdn as defined by E.164 (described above) Example: <code class="prettyprint">4740485124</code>.</td>
+<td>unique member&rsquo;s msisdn as defined <a href="#msisdn-member-identifier">here</a>) Example: <code class="prettyprint">4740485124</code>.</td>
 </tr>
 </tbody></table>
 
@@ -1711,9 +1712,10 @@ Authentication with <code>X-Authorization-Token</code> or <code>X-Customer-Priva
 
 <h2 id="check-if-member-exists">Check if member exists</h2>
 <pre class="highlight shell tab-shell"><code>curl -I <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span> <span class="se">\</span>
-  -H <span class="s2">"X-Authorization-Token: alphanumeric_string"</span> <span class="se">\</span>
-  -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\ </span>
-  -H <span class="s2">"X-User-Agent: CURL manual test"</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
 </code></pre>
 <blockquote>
 <p>Returns hash consisting of just one property: :exists</p>
@@ -1750,7 +1752,7 @@ Authentication with <code>X-Authorization-Token</code> or <code>X-Customer-Priva
 </tr>
 <tr>
 <td>msisdn</td>
-<td>unique member&rsquo;s msisdn as defined by E.164 (described above). Example: <code class="prettyprint">4740485124</code>.</td>
+<td>unique member&rsquo;s msisdn as defined <a href="#msisdn-member-identifier">here</a>) Example: <code class="prettyprint">4740485124</code>.</td>
 </tr>
 <tr>
 <td>email</td>
@@ -1770,9 +1772,10 @@ Requires &lsquo;BL:Api:Members:Check&rsquo; permit
 
 <h2 id="get-member">Get member</h2>
 <pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span> <span class="se">\</span>
-  -H <span class="s2">"X-Authorization-Token: alphanumeric_string"</span> <span class="se">\</span>
-  -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\ </span>
-  -H <span class="s2">"X-User-Agent: CURL manual test"</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
 </code></pre>
 <blockquote>
 <p>When successful, the above command returns JSON structured like this:</p>
@@ -1883,7 +1886,7 @@ Requires &lsquo;BL:Api:Members:Check&rsquo; permit
 </tr>
 <tr>
 <td>msisdn</td>
-<td>unique member&rsquo;s msisdn as defined by E.164 (described above). Example: <code class="prettyprint">4740485124</code>.</td>
+<td>unique member&rsquo;s msisdn as defined <a href="#msisdn-member-identifier">here</a>) Example: <code class="prettyprint">4740485124</code>.</td>
 </tr>
 <tr>
 <td>email</td>
@@ -1903,10 +1906,48 @@ Requires &lsquo;BL:Api:Members:Get&rsquo; permit
 </aside>
 
 <h2 id="create-member">Create member</h2>
+<pre class="highlight shell tab-shell"><code>
+curl -X POST <span class="se">\</span>
+  https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+    "properties": {
+        "email": "dev+6@test.com",
+        "msisdn": "4740485124",
+        "first_name": "THe",
+        "last_name": "Doge"
+    },
+    "send_welcome_message": false
+}'</span>
 
+</code></pre>
+<blockquote>
+<p>When successful, the above command returns JSON as depicted in &ldquo;Get member&rdquo; section</p>
+
+<p>When payload is invalid, validation errors like this are returned:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+
+            </span><span class="s2">"property"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"duplicated_email_in_community"</span><span class="p">,</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
 <p>Create member with given properties.</p>
 
-<p>When invalid authentication token is provided response <code class="prettyprint">401 Unauthorized</code> is returned disregarding whether member exists or not.</p>
+<p>Available properties and their validation rules are defined by Loyalty Club schema (see: <a href="#get-loyalty-clubs-schema34">Get loyalty&rsquo;s club schema</a>).</p>
+
+<p>Actual welcome messages sending depends on Loyalty Club and Product configuration.
+For example, even if send_email_welcome_message:true param is provided, message may not be sent because either Product 
+or Loyalty has disabled welcome messages or Loyalty Club has no e-mails configured at all.</p>
+
+<p>There is also a possibility to have multiple SMS welcome messages sent. The one that matches Product or default one will be sent.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
@@ -1924,10 +1965,6 @@ Requires &lsquo;BL:Api:Members:Get&rsquo; permit
 <td>loyalty_club_slug</td>
 <td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
 </tr>
-<tr>
-<td>id</td>
-<td>member&rsquo;s ID</td>
-</tr>
 </tbody></table>
 
 <h3 id="post-json-parameters">POST (JSON) Parameters</h3>
@@ -1935,71 +1972,114 @@ Requires &lsquo;BL:Api:Members:Get&rsquo; permit
 <table><thead>
 <tr>
 <th>Parameter</th>
+<th>Required?</th>
+<th>Default</th>
 <th>Description</th>
 <th>Type</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>properties</td>
+<td><strong>yes</strong></td>
+<td>none</td>
 <td>JSON with properties for member</td>
 <td>JSON Object</td>
 </tr>
 <tr>
 <td>properties[&lsquo;language&rsquo;]</td>
-<td>Language used by user, if not set then &ldquo;default_language&rdquo; is taken from schema</td>
+<td>no</td>
+<td>&ldquo;default_language&rdquo; from schema</td>
+<td>Language used by user</td>
 <td>string</td>
 </tr>
 <tr>
-<td>send_welcome_message</td>
-<td>If true, SMS welcome message will be send to member</td>
-<td>Boolean</td>
+<td>properties[&lsquo;msisdn&rsquo;]</td>
+<td>yes*</td>
+<td>none</td>
+<td>Unique member&rsquo;s msisdn as defined <a href="#msisdn-member-identifier">here</a>) Example: <code class="prettyprint">4740485124</code>.</td>
+<td>string</td>
 </tr>
 <tr>
-<td>send_email_welcome_message</td>
-<td>If true and emails configured in loyalty club, email welcome (verification) message will be send to member</td>
-<td>Boolean</td>
+<td>properties[&lsquo;email&rsquo;]</td>
+<td>yes*</td>
+<td>none</td>
+<td>Member&rsquo;s email</td>
+<td>string</td>
 </tr>
 <tr>
 <td>sms_enabled</td>
-<td>If true SMS channel will be enabled for member</td>
+<td>no</td>
+<td>true</td>
+<td>Should SMS channel be enabled for member?</td>
 <td>Boolean</td>
 </tr>
 <tr>
 <td>email_enabled</td>
-<td>If true email channel will be enabled for member</td>
+<td>no</td>
+<td>true</td>
+<td>Should email channel be enabled for member?</td>
 <td>Boolean</td>
 </tr>
 <tr>
 <td>push_enabled</td>
-<td>If true push channel will be enabled for member</td>
+<td>no</td>
+<td>true</td>
+<td>Should push channel will be enabled for member?</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>send_sms_welcome_message</td>
+<td>no</td>
+<td>true</td>
+<td>Should SMS welcome message be sent to member?</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>send_email_welcome_message</td>
+<td>no</td>
+<td>true</td>
+<td>Should email welcome be sent to member</td>
 <td>Boolean</td>
 </tr>
 </tbody></table>
 
-<aside class="notice">
-There is possibility to have multiple SMS welcome messages. Sent will be the one that matches Product or default one.
-</aside>
+<p>&ast; At least one of those properties must be provided</p>
 
 <h3 id="responses">Responses</h3>
 
 <ul>
-<li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
-<li><strong>400 Bad request</strong> - there are <a href="#validation-on-members">validation errors</a>.</li>
+<li><strong>200</strong> - Created member JSON object</li>
+<li><strong>422 Unprocessable entity</strong> - <a href="#validation-on-members">validation errors</a> JSON object.</li>
 </ul>
 
 <aside class="notice">
-Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
+Requires &lsquo;BL:Api:Members:Create&rsquo; permit
 </aside>
 
 <h2 id="update-member">Update member</h2>
+<pre class="highlight shell tab-shell"><code>
+curl -X PUT <span class="se">\</span>
+  https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+    "properties": {
+        "last_name": "Doge"
+    }
+}'</span>
 
-<p>Update member&rsquo;s properties with given ones.</p>
+</code></pre>
+<blockquote>
+<p>When successful, the above command returns JSON as depicted in &ldquo;Get member&rdquo; section</p>
 
-<p>It is intended for partial updates - not given properties are neither deleted nor overwritten.</p>
+<p>When payload is invalid, validation errors are returned as depicted in &ldquo;Create member&rdquo; section</p>
+</blockquote>
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><strong>PATCH</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
+<p><strong>PUT</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -2053,13 +2133,13 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 <h3 id="responses">Responses</h3>
 
 <ul>
-<li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
-<li><strong>400 Bad request</strong> - there are <a href="#validation-on-members">validation errors</a>.</li>
+<li><strong>200</strong> - Created member JSON object</li>
 <li><strong>404 Not found</strong> - member with ID was not found</li>
+<li><strong>422 Unprocessable entity</strong> - <a href="#validation-on-members">validation errors</a> JSON object.</li>
 </ul>
 
 <aside class="notice">
-Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
+Requires &lsquo;BL:Api:Members:Update&rsquo; permit
 </aside>
 
 <h2 id="remove-member">Remove member</h2>
@@ -2069,10 +2149,12 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 <p>It is possible to trigger optout message by setting <code class="prettyprint">send_unsubscribe_message=true</code> query string parameter.</p>
 
 <h3 id="http-request">HTTP Request</h3>
-<pre class="highlight shell tab-shell"><code>curl -X DELETE -H <span class="s2">"X-Authorization-Token: alphanumeric_string"</span> <span class="se">\</span>
-     -H <span class="s2">"X-Product-Name: custom-product-name"</span> <span class="se">\</span>
-     -H <span class="s2">"X-User-Agent: CURL manual test"</span> <span class="se">\</span>
-     <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span>
+<pre class="highlight shell tab-shell"><code>curl -X DELETE <span class="se">\</span>
+    <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span> <span class="se">\</span>
+    -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+    -H <span class="s1">'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+    -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+    -H <span class="s1">'X-User-Agent: CURL manual test'</span>
 </code></pre>
 <blockquote>
 <p>Successful removal is indicated by response code 200</p>
