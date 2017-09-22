@@ -398,6 +398,7 @@ properties | **yes** | none | JSON with properties for member | JSON Object
 properties\['language'\] | no | "default_language" from schema | Language used by user | string
 properties\['msisdn'\] | yes* | none | Unique member's msisdn as defined [here](#msisdn-member-identifier)) Example: `4740485124`.| string
 properties\['email'\] | yes* | none | Member's email | string
+password | no | none | Member's password. Not required, but user won't be able to log in without this | string
 sms_enabled | no | true | Should SMS channel be enabled for member? | Boolean
 email_enabled | no | true | Should email channel be enabled for member? | Boolean
 push_enabled | no | true | Should push channel will be enabled for member? | Boolean
@@ -459,6 +460,7 @@ id | member's ID.
 Parameter | Required? | Default | Description | Type
 --------- | ----------- | ----------- | --------- | -----------
 properties | **yes** | none | JSON with properties for member | JSON Object
+password | no | none | Member's password | string
 sms_enabled | no | true | Should SMS channel be enabled for member? | Boolean
 email_enabled | no | true | Should email channel be enabled for member? | Boolean
 push_enabled | no | true | Should push channel will be enabled for member? | Boolean
