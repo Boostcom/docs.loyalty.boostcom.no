@@ -454,19 +454,19 @@ Parameter | Description
 loyalty_club_slug | unique slugified name of the loyalty club. Example: `boosters`.
 id | member's ID.
 
-### PATCH (JSON) Parameters
+### PUT (JSON) Parameters
 
-Parameter | Description | Type
---------- | ----------- | ---------
-properties | JSON with properties for member | JSON Object
-sms_enabled | If true SMS channel will be enabled for member | Boolean
-email_enabled | If true email channel will be enabled for member | Boolean
-push_enabled | If true push channel will be enabled for member | Boolean
+Parameter | Required? | Default | Description | Type
+--------- | ----------- | ----------- | --------- | -----------
+properties | **yes** | none | JSON with properties for member | JSON Object
+sms_enabled | no | true | Should SMS channel be enabled for member? | Boolean
+email_enabled | no | true | Should email channel be enabled for member? | Boolean
+push_enabled | no | true | Should push channel will be enabled for member? | Boolean
 
 ### Responses
 
-* **200** - Created member JSON object
-* **404 Not found** - member with ID was not found
+* **200** - Updated member JSON object
+* **404 Not found** - member could not be found
 * **422 Unprocessable entity** - [validation errors](#validation-on-members) JSON object.
 
 <aside class="notice">
@@ -478,6 +478,7 @@ Requires 'BL:Api:Members:Update' permit
 Removes member from loyalty club.
 
 It is possible to trigger optout message by setting `send_unsubscribe_message=true` query string parameter.
+Same as welcome messages, optout messages sending also depends on Loyalty Club and Product configuration.
 
 ### HTTP Request
 
@@ -490,7 +491,7 @@ curl -X DELETE \
     -H 'X-User-Agent: CURL manual test'
 ```
 
-> Successful removal is indicated by response code 200
+> When successful, the above command returns JSON as depicted in "Get member" section
 
 **DELETE** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:id`
 
@@ -503,15 +504,15 @@ id | member's ID.
 
 ### Query Parameters
 
-Parameter | Description | Type
---------- | ----------- | ---------
-send_unsubscribe_message | If true, optout message will be send to member. Example: `true`. | Boolean
+Parameter | Required? | Default | Description | Type
+--------- | ----------- | ----------- | --------- | -----------
+send_unsubscribe_message | no | true | Should optout message be sent to member? | Boolean
 
 ### Responses
 
-* **200** - success with member's properties in response body
-* **404 Not found** - member not found
+* **200** - Destroyed member JSON object
+* **404 Not found** - member could not be found
 
 <aside class="notice">
-Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
+Requires 'BL:Api:Members:Destroy' permit
 </aside>
