@@ -567,6 +567,13 @@ or Loyalty has disabled welcome messages or Loyalty Club has no e-mails configur
 <td>string</td>
 </tr>
 <tr>
+<td>password</td>
+<td>no</td>
+<td>none</td>
+<td>Member&rsquo;s password. Not required, but user won&rsquo;t be able to log in without this</td>
+<td>string</td>
+</tr>
+<tr>
 <td>sms_enabled</td>
 <td>no</td>
 <td>true</td>
@@ -682,6 +689,13 @@ curl -X PUT <span class="se">\</span>
 <td>none</td>
 <td>JSON with properties for member</td>
 <td>JSON Object</td>
+</tr>
+<tr>
+<td>password</td>
+<td>no</td>
+<td>none</td>
+<td>Member&rsquo;s password</td>
+<td>string</td>
 </tr>
 <tr>
 <td>sms_enabled</td>
