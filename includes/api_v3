@@ -634,8 +634,14 @@ curl -X PUT <span class="se">\</span>
 <blockquote>
 <p>When successful, the above command returns JSON as depicted in &ldquo;Get member&rdquo; section</p>
 
-<p>When payload is invalid, validation errors are returned as depicted in &ldquo;Create member&rdquo; section</p>
+<p>When payload is invalid, validation errors like this are returned:</p>
 </blockquote>
+
+<p>Update member&rsquo;s properties with given ones.</p>
+
+<p>It is intended for partial updates - not given properties are neither deleted nor overwritten.</p>
+
+<p>If deleting attribute is is intended, its value should be set to <code class="prettyprint">null</code>.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
@@ -659,33 +665,43 @@ curl -X PUT <span class="se">\</span>
 </tr>
 </tbody></table>
 
-<h3 id="patch-json-parameters">PATCH (JSON) Parameters</h3>
+<h3 id="put-json-parameters">PUT (JSON) Parameters</h3>
 
 <table><thead>
 <tr>
 <th>Parameter</th>
+<th>Required?</th>
+<th>Default</th>
 <th>Description</th>
 <th>Type</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>properties</td>
+<td><strong>yes</strong></td>
+<td>none</td>
 <td>JSON with properties for member</td>
 <td>JSON Object</td>
 </tr>
 <tr>
 <td>sms_enabled</td>
-<td>If true SMS channel will be enabled for member</td>
+<td>no</td>
+<td>true</td>
+<td>Should SMS channel be enabled for member?</td>
 <td>Boolean</td>
 </tr>
 <tr>
 <td>email_enabled</td>
-<td>If true email channel will be enabled for member</td>
+<td>no</td>
+<td>true</td>
+<td>Should email channel be enabled for member?</td>
 <td>Boolean</td>
 </tr>
 <tr>
 <td>push_enabled</td>
-<td>If true push channel will be enabled for member</td>
+<td>no</td>
+<td>true</td>
+<td>Should push channel will be enabled for member?</td>
 <td>Boolean</td>
 </tr>
 </tbody></table>
@@ -693,8 +709,8 @@ curl -X PUT <span class="se">\</span>
 <h3 id="responses">Responses</h3>
 
 <ul>
-<li><strong>200</strong> - Created member JSON object</li>
-<li><strong>404 Not found</strong> - member with ID was not found</li>
+<li><strong>200</strong> - Updated member JSON object</li>
+<li><strong>404 Not found</strong> - member could not be found</li>
 <li><strong>422 Unprocessable entity</strong> - <a href="#validation-on-members">validation errors</a> JSON object.</li>
 </ul>
 
@@ -706,7 +722,8 @@ Requires &lsquo;BL:Api:Members:Update&rsquo; permit
 
 <p>Removes member from loyalty club.</p>
 
-<p>It is possible to trigger optout message by setting <code class="prettyprint">send_unsubscribe_message=true</code> query string parameter.</p>
+<p>It is possible to trigger optout message by setting <code class="prettyprint">send_unsubscribe_message=true</code> query string parameter.
+Same as welcome messages, optout messages sending also depends on Loyalty Club and Product configuration.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 <pre class="highlight shell tab-shell"><code>curl -X DELETE <span class="se">\</span>
@@ -717,7 +734,7 @@ Requires &lsquo;BL:Api:Members:Update&rsquo; permit
     -H <span class="s1">'X-User-Agent: CURL manual test'</span>
 </code></pre>
 <blockquote>
-<p>Successful removal is indicated by response code 200</p>
+<p>When successful, the above command returns JSON as depicted in &ldquo;Get member&rdquo; section</p>
 </blockquote>
 
 <p><strong>DELETE</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
@@ -745,13 +762,17 @@ Requires &lsquo;BL:Api:Members:Update&rsquo; permit
 <table><thead>
 <tr>
 <th>Parameter</th>
+<th>Required?</th>
+<th>Default</th>
 <th>Description</th>
 <th>Type</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>send_unsubscribe_message</td>
-<td>If true, optout message will be send to member. Example: <code class="prettyprint">true</code>.</td>
+<td>no</td>
+<td>true</td>
+<td>Should optout message be sent to member?</td>
 <td>Boolean</td>
 </tr>
 </tbody></table>
@@ -759,10 +780,10 @@ Requires &lsquo;BL:Api:Members:Update&rsquo; permit
 <h3 id="responses">Responses</h3>
 
 <ul>
-<li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
-<li><strong>404 Not found</strong> - member not found</li>
+<li><strong>200</strong> - Destroyed member JSON object</li>
+<li><strong>404 Not found</strong> - member could not be found</li>
 </ul>
 
 <aside class="notice">
-Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
+Requires &lsquo;BL:Api:Members:Destroy&rsquo; permit
 </aside>
