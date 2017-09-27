@@ -1440,345 +1440,125 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 
           <h1 id="api-v3-reference-draft-work-in-progress">Api V3 reference (draft, work in progress)</h1>
 
+<h2 id="general-info">General info</h2>
+
 <p><strong>This is only draft!</strong></p>
 
 <p>You can use Api V3 only when your customer is migrated to new backend service for data.</p>
 
-<h2 id="product-name">Product name</h2>
+<h3 id="product">Product</h3>
+
+<blockquote>
+<p>Example header: <code class="prettyprint">X-Product-Name: ios-app</code></p>
+</blockquote>
 
 <p>Each system that is communicating with us should uniquely identify itself so it is possible to distinguish optin/update channels.
-That will allow further targeting members by communication channel.
-For that we use product name and header <code class="prettyprint">X-Product-Name</code> is intended to provide the necessary granularity.</p>
+That will allow further targeting members by communication channel.</p>
+
+<p>For that we use product name. It should be passed as <strong>required</strong> header <code class="prettyprint">X-Product-Name</code> that is intended to provide the necessary granularity.</p>
 
 <p>If you miss your product name, please <a href="http://boostcom.no">let us know</a>.</p>
 
-<h2 id="client-authentication-and-authorization-new">Client Authentication and Authorization (new)</h2>
+<h3 id="client-authorization">Client Authorization</h3>
 
-<p>All of the endpoints require a client authorization header - <code class="prettyprint">X-Authorization-Token</code>.</p>
+<blockquote>
+<p>Example header: <code class="prettyprint">X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM</code></p>
+</blockquote>
+
+<p>All of the endpoints <strong>require</strong> a client authorization header - <code class="prettyprint">X-Client-Authorization</code>.</p>
 
 <p>It should be used only on backend and never exposed in frontend code.</p>
 
-<p>There are permits assigned to the token. Depending what permits are assigned, access to some of the endpoints
+<p>Each token has are permits assigned to it. Depending what permits are assigned, access to some of the endpoints
 may be restricted.</p>
 
-<p>If you miss your authentication tokens, please <a href="http://boostcom.no">let us know</a>.</p>
+<p>If you miss your authentication token, please <a href="http://boostcom.no">let us know</a>.</p>
 
-<h2 id="x-user-agent-header">X-User-Agent header</h2>
+<h3 id="x-user-agent">X-User-Agent</h3>
 
-<p>As single <code class="prettyprint">X-Authorization-Token</code> may be common for multiple clients, <code class="prettyprint">X-User-Agent</code> is required to identify client
-for information purposes and debugging so we better know who uses the service.</p>
+<blockquote>
+<p>Example header: <code class="prettyprint">X-User-Agent: Infinity Mall Android App</code></p>
+</blockquote>
 
-<p>It should be arbitrary chosen to represent client specifics (e.g. &lsquo;SuperMall Android App&rsquo; or &lsquo;SuperMall backend users service&rsquo;)</p>
+<p><code class="prettyprint">X-User-Agent</code> is <strong>required</strong> to distinguish specific client for information and debugging purposes so we better know who uses the service.</p>
 
-<h2 id="common-http-errors">Common HTTP errors</h2>
+<p>It should be arbitrarily chosen to represent client specifics (e.g. &lsquo;Infinity Mall Android App v1.2&rsquo; or &lsquo;Infinity Mall Backend Service&rsquo;)</p>
+
+<h3 id="oauth2"><a name="v3-oauth2"></a> OAuth2</h3>
+
+<blockquote>
+<p>Example header: <code class="prettyprint">X-Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522</code></p>
+</blockquote>
+
+<p>Actions related to specific member (the one that is using your application) require to have member authenticated and we implement
+OAuth2 flow for this.</p>
+
+<p>Thos are specific actions that require OAuth2 authentication:</p>
+
+<ul>
+<li><a href="#v3-me-get">Me &gt; Get</a></li>
+<li><a href="#v3-me-update">Me &gt; Update</a></li>
+<li><a href="#v3-me-destroy">Me &gt; Destroy</a></li>
+</ul>
+
+<p>To authorize them, we <strong>require</strong> <code class="prettyprint">Authorization</code> header that should contain: <code class="prettyprint">Bearer :access_token</code>. </p>
+
+<p>Look at <a href="#v3-token-create">OAuth Token &bull; Create</a> to see how to obtain the :access_token.</p>
+
+<h3 id="common-url-parameter-loyalty_club_slug">Common URL Parameter - <code class="prettyprint">:loyalty_club_slug</code></h3>
+
+<blockquote>
+<p>Example slug: &lsquo;infinity-mall&rsquo;</p>
+</blockquote>
+
+<p>As all of the API endpoints work in the context of specific Loyalty Club, they&rsquo;re scoped within it&rsquo;s identifier - :loyalty_club_slug.</p>
+
+<p>It&rsquo;s an unique slugified name of the Loyalty Club.</p>
+
+<h3 id="common-http-error-codes">Common HTTP error codes</h3>
 
 <table><thead>
 <tr>
-<th>Error</th>
+<th>Status</th>
 <th>Reason</th>
 </tr>
 </thead><tbody>
 <tr>
-<td><code class="prettyprint">400 (Bad Request)</code></td>
-<td>Some of required headers is missing</td>
+<td><code class="prettyprint">400</code></td>
+<td>Some of required header is missing</td>
 </tr>
 <tr>
-<td><code class="prettyprint">401 (Unauthorized)</code></td>
-<td><code class="prettyprint">X-Authorization-Token</code> is invalid (or doesn&rsquo;t match provided loyalty club or product)</td>
+<td><code class="prettyprint">401</code></td>
+<td><code class="prettyprint">X-Client-Authorization</code> is invalid (or doesn&rsquo;t match provided loyalty club or product)</td>
 </tr>
 <tr>
-<td><code class="prettyprint">403 (Forbidden)</code></td>
+<td><code class="prettyprint">403</code></td>
 <td>Not authorized to perform this action (no permit)</td>
 </tr>
 <tr>
-<td><code class="prettyprint">404 (Not Found)</code></td>
+<td><code class="prettyprint">404</code></td>
 <td>The requested resource doesn&rsquo;t exist</td>
 </tr>
 <tr>
-<td><code class="prettyprint">422 (Unprocessable Entity)</code></td>
-<td>Invalid params are provided (e.g. incorrect properties on member creation)</td>
+<td><code class="prettyprint">422</code></td>
+<td>Invalid parameters are provided (e.g. incorrect properties on member creation)</td>
+</tr>
+<tr>
+<td><code class="prettyprint">460</code></td>
+<td>OAuth token required for the action is invalid (applies only to OAuth-related actions - see <a href="#v3-oauth2">OAuth2</a>)</td>
 </tr>
 </tbody></table>
 
-<h2 id="oauth2-for-members"><strong>OAuth2 for members</strong></h2>
+<p>Also, most of handled errors have JSON response body like this:</p>
 
-<h3 id="testing-and-implementation">Testing and implementation</h3>
+<p><code class="prettyprint">{&quot;error&quot;: &quot;Message describing what went wrong&quot;}</code></p>
 
-<p>You can use e.g. this oauth2 client for Ruby: https://github.com/intridea/oauth2</p>
+<!--- ############################################################################################################# --->
 
-<h3 id="getting-auth-token">Getting Auth Token</h3>
+<h2 id="member-json-model"><a name="v3-member-model"></a> Member JSON model</h2>
 
-<h4 id="http-request">HTTP request</h4>
-<pre class="highlight shell tab-shell"><code>curl -F <span class="nv">grant_type</span><span class="o">=</span>password <span class="se">\</span>
--F <span class="nv">msisdn</span><span class="o">=</span>4740012345 <span class="se">\</span>
--F <span class="nv">password</span><span class="o">=</span>reallyhardpassword <span class="se">\</span>
--X POST http://localhost:3000/oauth/token
-</code></pre><pre class="highlight shell tab-shell"><code>curl -F <span class="nv">grant_type</span><span class="o">=</span>refresh_token <span class="se">\</span>
--F <span class="nv">client_id</span><span class="o">=</span>9b36d8c0db59eff5038aea7a417d73e69aea75b41aac771816d2ef1b3109cc2f <span class="se">\</span>
--F <span class="nv">client_secret</span><span class="o">=</span>d6ea27703957b69939b8104ed4524595e210cd2e79af587744a7eb6e58f5b3d2 <span class="se">\</span>
--F <span class="nv">refresh_token</span><span class="o">=</span>c65b265611713028344a2c285dfdc4e28f9ce2dbc36b9f7e12f626a3d106a304 <span class="se">\</span>
--X POST http://localhost:3000/oauth/token
-</code></pre>
 <blockquote>
-<p>When successful, the above commands returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"access_token"</span><span class="p">:</span><span class="s2">"0ddb922452c983a70566e30dce16e2017db335103e35d783874c448862a78168"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"token_type"</span><span class="p">:</span><span class="s2">"bearer"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"expires_in"</span><span class="p">:</span><span class="mi">7200</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"refresh_token"</span><span class="p">:</span><span class="s2">"f2188c4165d912524e04c6496d10f06803cc08ed50271a0b0a73061e3ac1c06c"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"scope"</span><span class="p">:</span><span class="s2">"public"</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p><strong>POST</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/oauth/token</code></p>
-
-<h4 id="url-parameters">URL Parameters</h4>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>loyalty_club_slug</td>
-<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
-</tr>
-</tbody></table>
-
-<h4 id="post-json-parameters">POST (JSON) Parameters</h4>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>grant_type</td>
-<td>type of grant (e.g. <code class="prettyprint">password</code> or <code class="prettyprint">refresh_token</code>)</td>
-</tr>
-<tr>
-<td>&lsquo;identifier&rsquo; (e.g. <code class="prettyprint">email</code> or <code class="prettyprint">msisdn</code>)</td>
-<td>identifier of member</td>
-</tr>
-<tr>
-<td>password</td>
-<td>member password while using <code class="prettyprint">password</code> grant_type</td>
-</tr>
-<tr>
-<td>client_id</td>
-<td>client id while using <code class="prettyprint">refresh_token</code> grant_type</td>
-</tr>
-<tr>
-<td>client_secret</td>
-<td>client secret while using <code class="prettyprint">refresh_token</code> grant_type</td>
-</tr>
-<tr>
-<td>refresh_token</td>
-<td>refresh token while using <code class="prettyprint">refresh_token</code> grant_type</td>
-</tr>
-</tbody></table>
-
-<h3 id="authorizing-with-access_token">Authorizing with access_token</h3>
-
-<p>Add to your request <code class="prettyprint">Authorization</code> header with value: <code class="prettyprint">&quot;Bearer &quot;</code> + <code class="prettyprint">access_token</code>
-or add it to query params, e.g. <code class="prettyprint">http://something.pl/anyurl?access_token=fe087c17dd15a84b3c939fbbbd1bbfd196d7ea28cfafbf1d6f15a6c74822ef30</code>.</p>
-
-<h2 id="get-loyalty-clubs-schema">Get loyalty club&rsquo;s schema</h2>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/member_schema"</span> <span class="se">\</span>
-  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
-  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
-</code></pre>
-<blockquote>
-<p>When successful, the above command returns JSON structured like this:</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://json-schema.org/draft-04/schema#"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"identifiers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"en"</span><span class="p">,</span><span class="w"> </span><span class="s2">"no"</span><span class="p">],</span><span class="w">
-  </span><span class="s2">"default_language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v2"</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"birthday"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date"</span><span class="w">
-    </span><span class="p">},</span><span class="w">
-    </span><span class="s2">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span><span class="w">
-      </span><span class="s2">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-        </span><span class="s2">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-          </span><span class="s2">"bikes_and_cars"</span><span class="p">,</span><span class="w">
-          </span><span class="s2">"sportwear"</span><span class="w">
-        </span><span class="p">]</span><span class="w">
-      </span><span class="p">}</span><span class="w">
-    </span><span class="p">}</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="s2">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
-    </span><span class="s2">"first_name"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"last_name"</span><span class="p">,</span><span class="w">
-    </span><span class="s2">"birthday"</span><span class="w">
-  </span><span class="p">]</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>Properties for members are defined as part of the loyalty club they belong to.
-To describe member properties we use <a href="http://json-schema.org/documentation.html">JSON Schema</a> definition.
-Properties of each member must conform to the defined schema.
-We support <strong>JSON schema Draft V4</strong> with format extension for <code class="prettyprint">date</code> (YYYY-MM-DD).</p>
-
-<p>Keys explanation:</p>
-
-<ul>
-<li><code class="prettyprint">identifiers</code> [Array of strings] - fields that are set to identify member</li>
-<li><code class="prettyprint">languages</code> [Array of strings] - array of languages set up in loyalty club</li>
-<li><code class="prettyprint">default_language</code> [string] - default language used in loyalty club and also used for mappings to Api v2</li>
-<li><code class="prettyprint">version</code> [string] - version of schema, currently the newest is <code class="prettyprint">v2</code></li>
-<li><code class="prettyprint">products</code> [Object] - properties scoping and ordering by product name, default one is <code class="prettyprint">default</code></li>
-<li><code class="prettyprint">required</code> [Array of strings] - required properties for member</li>
-</ul>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/member_schema</code></p>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>loyalty_club_slug</td>
-<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
-</tr>
-</tbody></table>
-
-<aside class="notice">
-Authentication only with <code>X-Authorization-Token</code>.
-</aside>
-
-<h2 id="send-member-token">Send member token</h2>
-
-<p><strong>Member tokens</strong> are used to authenticate actions on particular members.
-<strong>Member token</strong> could be issued even before registering enduser as a member in community.
-In that case we create temporary token that is valid till end of day.
-That <strong>member token</strong> could be used to authenticate <em>Create Member</em> action described below.</p>
-
-<p>It sends member token to the user via SMS.</p>
-
-<p>It can be used multiple times.</p>
-
-<p>If msisdn is not valid, then <code class="prettyprint">400 Bad Request</code> is returned.</p>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><strong>POST</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token</code></p>
-
-<h3 id="url-parameters">URL Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>loyalty_club_slug</td>
-<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
-</tr>
-<tr>
-<td>msisdn</td>
-<td>unique member&rsquo;s msisdn as defined <a href="#msisdn-member-identifier">here</a>) Example: <code class="prettyprint">4740485124</code>.</td>
-</tr>
-</tbody></table>
-
-<aside class="notice">
-Authentication with <code>X-Authorization-Token</code> or <code>X-Customer-Private-Token</code>.
-</aside>
-
-<h2 id="check-if-member-exists">Check if member exists</h2>
-<pre class="highlight shell tab-shell"><code>curl -I <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span> <span class="se">\</span>
-  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
-  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
-</code></pre>
-<blockquote>
-<p>Returns hash consisting of just one property: :exists</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"exists"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">If</span><span class="w"> </span><span class="err">exists</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="err">.</span><span class="w"> </span><span class="err">If</span><span class="w"> </span><span class="err">not</span><span class="p">,</span><span class="w"> </span><span class="kc">false</span><span class="err">.</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p>It can be used to check if member is in loyalty club or not.</p>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id/check_existence</code></p>
-
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn/check_existence</code></p>
-
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/check_existence</code></p>
-
-<h3 id="url-parameters">URL Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>loyalty_club_slug</td>
-<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
-</tr>
-<tr>
-<td>id</td>
-<td>member&rsquo;s ID.</td>
-</tr>
-<tr>
-<td>msisdn</td>
-<td>unique member&rsquo;s msisdn as defined <a href="#msisdn-member-identifier">here</a>) Example: <code class="prettyprint">4740485124</code>.</td>
-</tr>
-<tr>
-<td>email</td>
-<td>unique member&rsquo;s email.</td>
-</tr>
-</tbody></table>
-
-<h3 id="response-code">Response code</h3>
-
-<ul>
-<li><strong>200</strong> </li>
-</ul>
-
-<aside class="notice">
-Requires &lsquo;BL:Api:Members:Check&rsquo; permit
-</aside>
-
-<h2 id="get-member">Get member</h2>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span> <span class="se">\</span>
-  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
-  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
-</code></pre>
-<blockquote>
-<p>When successful, the above command returns JSON structured like this:</p>
+<p>Example:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
   </span><span class="s2">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w">
@@ -1804,7 +1584,7 @@ Requires &lsquo;BL:Api:Members:Check&rsquo; permit
   </span><span class="s2">"updated_at"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2017-04-03T09:35:19.313+02:00"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p>Fetches member&rsquo;s properties.</p>
+<p>Standard member JSON model returned from many API endpoints.</p>
 
 <table><thead>
 <tr>
@@ -1860,13 +1640,462 @@ Requires &lsquo;BL:Api:Members:Check&rsquo; permit
 </tr>
 </tbody></table>
 
-<h3 id="http-request">HTTP Request</h3>
+<!--- ############################################################################################################# --->
 
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
+<h2 id="oauth-token-create"><a name="v3-token-create"></a> OAuth Token &bull; Create</h2>
 
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn</code></p>
+<blockquote>
+<p>Create token example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/oauth/token"</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+      "grant_type": "password",
+      "identifier_type": "id",
+      "identifier": 44444444,
+      "password": "123"
+    }'</span>
+</code></pre>
+<blockquote>
+<p>Refresh token example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/oauth/token"</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+      "grant_type": "refresh_token",
+      "refresh_token": "36c636e4290d28488a13691afce351397bec21b1246c2c7896a8262d9bfbc4c4"
+    }'</span>
+</code></pre>
+<blockquote>
+<p>When successful, both commands return JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"access_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"af9e5361cd7e083dfa4132df3ea7ab82fac21496991632a9994a8c2a9f33884f"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"token_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"bearer"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"expires_in"</span><span class="p">:</span><span class="w"> </span><span class="mi">86400</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"refresh_token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"36c636e4290d28488a13691afce351397bec21b1246c2c7896a8262d9bfbc4c4"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1506523094</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"resource_owner_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>POST</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/oauth/token</code></p>
 
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email</code></p>
+<p>Creates a new access token by one of two methods (grant types):</p>
+
+<ul>
+<li><code class="prettyprint">password</code> - token is issued by providing user credentials</li>
+<li><code class="prettyprint">refresh_token</code> - token is issued by providing refresh token obtained from <code class="prettyprint">password</code> grant type </li>
+</ul>
+
+<h3 id="creating-token-password-grant">Creating token (<code class="prettyprint">password</code> grant)</h3>
+
+<p>When creating new access token, <code class="prettyprint">&quot;grant_type&quot;: &quot;password&quot;</code> should be given along with member credentials (see example on the right).</p>
+
+<p>In response, two tokens are returned:</p>
+
+<ul>
+<li><code class="prettyprint">access_token</code> that is valid for <strong>24 hours</strong> - may be used to authenticate member in member-related actions (see: <a href="#v3-oauth2">OAuth2</a>).</li>
+<li><code class="prettyprint">refresh_token</code> which is valid for <strong>1 year</strong> - may be used to get a new access token (with <code class="prettyprint">refresh_token</code> grant)</li>
+</ul>
+
+<p>Also, <code class="prettyprint">resource_owner_id</code> is returned, is an ID of member that the token has been issued for. </p>
+
+<h3 id="refreshing-token-refresh_token-grant">Refreshing token (<code class="prettyprint">refresh_token</code> grant)</h3>
+
+<p>You can obtain a new token after (or before) it&rsquo;s expiration time, by using <code class="prettyprint">refresh_token</code> grant.</p>
+
+<p>Param <code class="prettyprint">grant_type: &quot;refresh_token&quot;</code> must be provided along with <code class="prettyprint">refresh_token: &quot;:refresh_token&quot;</code>  (see example on the right).</p>
+
+<p>It returns a token response, same as for <code class="prettyprint">password</code> grant, but with new tokens.</p>
+
+<h3 id="post-parameters-json-object">POST Parameters (JSON object)</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+<th>For grant type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>grant_type</td>
+<td>type of grant</td>
+<td>enum: <code class="prettyprint">password</code>, <code class="prettyprint">refresh_token</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td>identifier_type</td>
+<td>identifier type that user should be retrieved by</td>
+<td>enum: <code class="prettyprint">id</code>, <code class="prettyprint">email</code>, <code class="prettyprint">msisdn</code></td>
+<td><code class="prettyprint">password</code></td>
+</tr>
+<tr>
+<td>identifier</td>
+<td>value of member identifier</td>
+<td>mixed (e.g. <code class="prettyprint">134123123</code>, <code class="prettyprint">+47123456789</code> or <code class="prettyprint">alice@example.com</code>)</td>
+<td><code class="prettyprint">password</code></td>
+</tr>
+<tr>
+<td>password</td>
+<td>member password</td>
+<td>string</td>
+<td><code class="prettyprint">password</code></td>
+</tr>
+<tr>
+<td>refresh_token</td>
+<td>refresh token</td>
+<td>string</td>
+<td><code class="prettyprint">access_token</code></td>
+</tr>
+</tbody></table>
+
+<h3 id="response-json-object">Response (JSON object)</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>access_token</td>
+<td>Token that member can be authenticated with</td>
+<td>string</td>
+</tr>
+<tr>
+<td>token_type</td>
+<td>Always &ldquo;bearer&rdquo;</td>
+<td>string</td>
+</tr>
+<tr>
+<td>expires_in</td>
+<td>Seconds for how long token will be valid</td>
+<td>integer (seconds)</td>
+</tr>
+<tr>
+<td>refresh_token</td>
+<td>Token that may be used to issue a new :access_token</td>
+<td>string</td>
+</tr>
+<tr>
+<td>created_at</td>
+<td>When the token has been created</td>
+<td>integer (timestamp)</td>
+</tr>
+<tr>
+<td>resource_owner_id</td>
+<td>ID of member that the token has been for</td>
+<td>integer</td>
+</tr>
+</tbody></table>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">421</code></td>
+<td>Invalid member credentials provided for <code class="prettyprint">password</code> grant. Either member could not be found or password is wrong - Only for  grant</td>
+</tr>
+<tr>
+<td><code class="prettyprint">422</code></td>
+<td>Invalid refresh_token provided for <code class="prettyprint">refresh_token</code> grant (may be expired)</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Members:OAuth</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="oauth-token-revoke"><a name="v3-token-create"></a> OAuth Token &bull; Revoke</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/oauth/revoke"</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+      "token": "36c636e4290d28488a13691afce351397bec21b1246c2c7896a8262d9bfbc4c4" 
+    }'</span>
+</code></pre>
+<blockquote>
+<p>Always returns an empty JSON object</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="err">Empty</span><span class="w"> </span><span class="err">object</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>POST</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/oauth/revoke</code></p>
+
+<p>Revokes a token (access or refresh). </p>
+
+<p>Always returns an empty response (even if given token is invalid).</p>
+
+<h3 id="post-parameters-json">POST Parameters (JSON)</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>token</td>
+<td>access or refresh token obtained from <a href="#v3-token-create">OAuth Token &bull; Create</a></td>
+<td>string</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Members:OAuth</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="oauth-token-info"><a name="v3-token-info"></a> OAuth Token &bull; Info</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/oauth/token/info"</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522'</span>
+
+</code></pre>
+<blockquote>
+<p>When successful, return JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+    </span><span class="s2">"resource_owner_id"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">ID</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">member</span><span class="w"> </span><span class="err">that</span><span class="w"> </span><span class="err">the</span><span class="w"> </span><span class="err">token</span><span class="w"> </span><span class="err">has</span><span class="w"> </span><span class="err">been</span><span class="w"> </span><span class="err">issued</span><span class="w"> </span><span class="err">for</span><span class="w">
+    </span><span class="s2">"scopes"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span><span class="w">
+    </span><span class="s2">"expires_in_seconds"</span><span class="p">:</span><span class="w"> </span><span class="mi">73614</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">Seconds</span><span class="w"> </span><span class="err">until</span><span class="w"> </span><span class="err">expiration</span><span class="w">
+    </span><span class="s2">"application"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"uid"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"created_at"</span><span class="p">:</span><span class="w"> </span><span class="mi">1506516784</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/oauth/token/info</code></p>
+
+<p>Returns info of given token (not refresh token) from <code class="prettyprint">Authorization</code> header.</p>
+
+<h3 id="response-json-object">Response (JSON object)</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>resource_owner_id</td>
+<td>ID of member that the token has been for</td>
+<td>integer</td>
+</tr>
+<tr>
+<td>scopes</td>
+<td>Not implemented</td>
+<td>Array<string></td>
+</tr>
+<tr>
+<td>expires_in_seconds</td>
+<td>Seconds for how long token will be valid</td>
+<td>integer (seconds)</td>
+</tr>
+<tr>
+<td>application</td>
+<td>Not implemented</td>
+<td>Object</td>
+</tr>
+<tr>
+<td>created_at</td>
+<td>When the token has been created</td>
+<td>integer (timestamp)</td>
+</tr>
+</tbody></table>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">460</code></td>
+<td>Token from <code class="prettyprint">Authorization</code> is invalid (or expired)</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Members:OAuth</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="loyalty-clubs-get-schema"><a name="v3-loyalty-clubs-schema"></a> Loyalty Clubs &bull; Get schema</h2>
+
+<blockquote>
+<p>Example</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/member_schema"</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
+</code></pre>
+<blockquote>
+<p>When successful, the above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"$schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://json-schema.org/draft-04/schema#"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"object"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"identifiers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"email"</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"languages"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"en"</span><span class="p">,</span><span class="w"> </span><span class="s2">"no"</span><span class="p">],</span><span class="w">
+  </span><span class="s2">"default_language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"no"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v2"</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"properties"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="s2">"email"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"birthday"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"format"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="s2">"interests"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"array"</span><span class="p">,</span><span class="w">
+      </span><span class="s2">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="s2">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+        </span><span class="s2">"enum"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="s2">"bikes_and_cars"</span><span class="p">,</span><span class="w">
+          </span><span class="s2">"sportwear"</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="s2">"required"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="s2">"first_name"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"last_name"</span><span class="p">,</span><span class="w">
+    </span><span class="s2">"birthday"</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/member_schema</code></p>
+
+<p>Properties for members are defined as part of the loyalty club they belong to.</p>
+
+<p>To describe member properties we use <a href="http://json-schema.org/documentation.html">JSON Schema</a> definition.
+Properties of each member must conform to the defined schema.</p>
+
+<p>We support <strong>JSON schema Draft V4</strong> with format extension for <code class="prettyprint">date</code> (YYYY-MM-DD).</p>
+
+<h3 id="response-json-object">Response (JSON object)</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>identifiers</td>
+<td>Fields that are set to identify member</td>
+<td>Array<string></td>
+</tr>
+<tr>
+<td>languages</td>
+<td>Languages set up in loyalty club</td>
+<td>Array<string></td>
+</tr>
+<tr>
+<td>default_language</td>
+<td>Default language used in loyalty club and also used for mappings to Api v2</td>
+<td>string</td>
+</tr>
+<tr>
+<td>version</td>
+<td>Version of schema, currently the newest is <code class="prettyprint">v2</code></td>
+<td>string</td>
+</tr>
+<tr>
+<td>products</td>
+<td>Properties scoping and ordering by product name, default one is <code class="prettyprint">default</code></td>
+<td>object</td>
+</tr>
+<tr>
+<td>required</td>
+<td>Required properties for member</td>
+<td>integer (timestamp)</td>
+</tr>
+<tr>
+<td>properties</td>
+<td>Properties describing member</td>
+<td>object</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Schema:Get</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="members-check-if-exists"><a name="v3-members-check"></a> Members &bull; Check if exists</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -I <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id"</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
+</code></pre>
+<blockquote>
+<p>Returns hash consisting of just one property: :exists</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"exists"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> 
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id/check_existence</code></p>
+
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn/check_existence</code></p>
+
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/check_existence</code></p>
+
+<p>It can be used to check whether member exists in loyalty club or not.</p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -1874,50 +2103,136 @@ Requires &lsquo;BL:Api:Members:Check&rsquo; permit
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Type</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>loyalty_club_slug</td>
-<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
-</tr>
-<tr>
 <td>id</td>
-<td>member&rsquo;s ID.</td>
+<td>Member&rsquo;s ID</td>
+<td>integer</td>
 </tr>
 <tr>
 <td>msisdn</td>
-<td>unique member&rsquo;s msisdn as defined <a href="#msisdn-member-identifier">here</a>) Example: <code class="prettyprint">4740485124</code>.</td>
+<td>Member&rsquo;s msisdn</td>
+<td>string (format as defined <a href="#msisdn-member-identifier">here</a> - example: <code class="prettyprint">4740485124</code>)</td>
 </tr>
 <tr>
 <td>email</td>
-<td>unique member&rsquo;s email.</td>
+<td>Member&rsquo;s email</td>
+<td>string (email)</td>
 </tr>
 </tbody></table>
 
-<h3 id="responses">Responses</h3>
+<h3 id="response-json-object">Response (JSON object)</h3>
 
-<ul>
-<li><strong>200</strong> - success with member&rsquo;s properties in response body</li>
-<li><strong>404 Not found</strong> - member with given identifier not found </li>
-</ul>
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>exists</td>
+<td>boolean</td>
+</tr>
+</tbody></table>
 
 <aside class="notice">
-Requires &lsquo;BL:Api:Members:Get&rsquo; permit
+Requires <code>BL:Api:Members:Check</code> permit
 </aside>
 
-<h2 id="create-member">Create member</h2>
+<!--- ############################################################################################################# --->
+
+<h2 id="members-get"><a name="v3-members-get"></a> Members &bull; Get</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id"</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
+</code></pre>
+<blockquote>
+<p>When successful, the above command returns member object as depicted <a href="#v3-member-model">here</a></p>
+</blockquote>
+
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
+
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn</code></p>
+
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email</code></p>
+
+<p>Returns member by one of three identifier types: <code class="prettyprint">id</code>, <code class="prettyprint">member</code> or <code class="prettyprint">email</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>Member&rsquo;s ID</td>
+<td>integer</td>
+</tr>
+<tr>
+<td>msisdn</td>
+<td>Member&rsquo;s msisdn</td>
+<td>string (format as defined <a href="#msisdn-member-identifier">here</a> - example: <code class="prettyprint">4740485124</code>)</td>
+</tr>
+<tr>
+<td>email</td>
+<td>Member&rsquo;s email</td>
+<td>string (email)</td>
+</tr>
+</tbody></table>
+
+<h3 id="response-json-object">Response (JSON object)</h3>
+
+<p>See: <a href="#v3-member-model">Member model</a></p>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">404</code></td>
+<td>Member with given identifier could not found</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Members:Get</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="members-create"><a name="v3-members-create"></a> Members &bull; Create</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
 <pre class="highlight shell tab-shell"><code>
 curl -X POST <span class="se">\</span>
-  https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members <span class="se">\</span>
+  https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members <span class="se">\</span>
   -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
   -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
   -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
   -d <span class="s1">'{
     "properties": {
         "email": "dev+6@test.com",
         "msisdn": "4740485124",
-        "first_name": "THe",
+        "first_name": "The",
         "last_name": "Doge"
     },
     "send_welcome_message": false
@@ -1925,7 +2240,7 @@ curl -X POST <span class="se">\</span>
 
 </code></pre>
 <blockquote>
-<p>When successful, the above command returns JSON as depicted in &ldquo;Get member&rdquo; section</p>
+<p>When successful, the above command returns created member object as depicted <a href="#v3-member-model">here</a></p>
 
 <p>When payload is invalid, validation errors like this are returned:</p>
 </blockquote>
@@ -1934,14 +2249,16 @@ curl -X POST <span class="se">\</span>
         </span><span class="p">{</span><span class="w">
 
             </span><span class="s2">"property"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email"</span><span class="p">,</span><span class="w">
-            </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"duplicated_email_in_community"</span><span class="p">,</span><span class="w">
+            </span><span class="s2">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"duplicated_email_in_community"</span><span class="w">
         </span><span class="p">}</span><span class="w">
     </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
+<p><strong>POST</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members</code></p>
+
 <p>Create member with given properties.</p>
 
-<p>Available properties and their validation rules are defined by Loyalty Club schema (see: <a href="#get-loyalty-clubs-schema34">Get loyalty&rsquo;s club schema</a>).</p>
+<p>Available properties and their validation rules are defined by Loyalty Club schema (see: <a href="#v3-loyalty-clubs-schema">here</a>).</p>
 
 <p>Actual welcome messages sending depends on Loyalty Club and Product configuration.
 For example, even if send_email_welcome_message:true param is provided, message may not be sent because either Product 
@@ -1949,25 +2266,7 @@ or Loyalty has disabled welcome messages or Loyalty Club has no e-mails configur
 
 <p>There is also a possibility to have multiple SMS welcome messages sent. The one that matches Product or default one will be sent.</p>
 
-<h3 id="http-request">HTTP Request</h3>
-
-<p><strong>POST</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members</code></p>
-
-<h3 id="url-parameters">URL Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>loyalty_club_slug</td>
-<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
-</tr>
-</tbody></table>
-
-<h3 id="post-json-parameters">POST (JSON) Parameters</h3>
+<h3 id="post-parameters-json">POST Parameters (JSON)</h3>
 
 <table><thead>
 <tr>
@@ -2052,47 +2351,63 @@ or Loyalty has disabled welcome messages or Loyalty Club has no e-mails configur
 
 <p>&ast; At least one of those properties must be provided</p>
 
-<h3 id="responses">Responses</h3>
+<h3 id="response-json-object">Response (JSON object)</h3>
 
-<ul>
-<li><strong>200</strong> - Created member JSON object</li>
-<li><strong>422 Unprocessable entity</strong> - <a href="#validation-on-members">validation errors</a> JSON object.</li>
-</ul>
+<p>Created member properties - see: <a href="#v3-member-model">Member model</a></p>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">422</code></td>
+<td><a href="#validation-on-members">validation errors</a> JSON object.</td>
+</tr>
+</tbody></table>
 
 <aside class="notice">
-Requires &lsquo;BL:Api:Members:Create&rsquo; permit
+Requires <code>BL:Api:Members:Create</code> permit
 </aside>
 
-<h2 id="update-member">Update member</h2>
+<!--- ############################################################################################################# --->
+
+<h2 id="members-update"><a name="v3-members-update"></a> Members &bull; Update</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
 <pre class="highlight shell tab-shell"><code>
 curl -X PUT <span class="se">\</span>
-  https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id <span class="se">\</span>
+  https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id <span class="se">\</span>
   -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
   -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
   -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
   -d <span class="s1">'{
     "properties": {
         "last_name": "Doge"
-    }
+    },
+    "password": "new_password"
 }'</span>
 
 </code></pre>
 <blockquote>
-<p>When successful, the above command returns JSON as depicted in &ldquo;Get member&rdquo; section</p>
+<p>When successful, the above command returns updated member object as depicted <a href="#v3-member-model">here</a></p>
 
-<p>When payload is invalid, validation errors like this are returned:</p>
+<p>When payload is invalid, validation errors as depicted <a href="#v3-members-create">here</a></p>
 </blockquote>
+
+<p><strong>PUT</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
 
 <p>Update member&rsquo;s properties with given ones.</p>
 
 <p>It is intended for partial updates - not given properties are neither deleted nor overwritten.</p>
 
-<p>If deleting attribute is is intended, its value should be set to <code class="prettyprint">null</code>.</p>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><strong>PUT</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
+<p>If deleting attribute is intended, it&rsquo;s value should be sent as <code class="prettyprint">null</code>.</p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -2100,98 +2415,102 @@ curl -X PUT <span class="se">\</span>
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Type</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>loyalty_club_slug</td>
-<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
-</tr>
-<tr>
 <td>id</td>
-<td>member&rsquo;s ID.</td>
+<td>Member&rsquo;s ID</td>
+<td>integer</td>
 </tr>
 </tbody></table>
 
-<h3 id="put-json-parameters">PUT (JSON) Parameters</h3>
+<h3 id="put-parameters-json">PUT Parameters (JSON)</h3>
 
 <table><thead>
 <tr>
 <th>Parameter</th>
-<th>Required?</th>
-<th>Default</th>
 <th>Description</th>
 <th>Type</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>properties</td>
-<td><strong>yes</strong></td>
-<td>none</td>
 <td>JSON with properties for member</td>
 <td>JSON Object</td>
 </tr>
 <tr>
 <td>password</td>
-<td>no</td>
-<td>none</td>
 <td>Member&rsquo;s password</td>
 <td>string</td>
 </tr>
 <tr>
 <td>sms_enabled</td>
-<td>no</td>
-<td>true</td>
 <td>Should SMS channel be enabled for member?</td>
 <td>Boolean</td>
 </tr>
 <tr>
 <td>email_enabled</td>
-<td>no</td>
-<td>true</td>
 <td>Should email channel be enabled for member?</td>
 <td>Boolean</td>
 </tr>
 <tr>
 <td>push_enabled</td>
-<td>no</td>
-<td>true</td>
 <td>Should push channel will be enabled for member?</td>
 <td>Boolean</td>
 </tr>
 </tbody></table>
 
-<h3 id="responses">Responses</h3>
+<h3 id="response-json-object">Response (JSON object)</h3>
 
-<ul>
-<li><strong>200</strong> - Updated member JSON object</li>
-<li><strong>404 Not found</strong> - member could not be found</li>
-<li><strong>422 Unprocessable entity</strong> - <a href="#validation-on-members">validation errors</a> JSON object.</li>
-</ul>
+<p>Member properties after update - see: <a href="#v3-member-model">Member model</a></p>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">404</code></td>
+<td>Member could not be found</td>
+</tr>
+<tr>
+<td><code class="prettyprint">422</code></td>
+<td><a href="#validation-on-members">validation errors</a> JSON object.</td>
+</tr>
+</tbody></table>
 
 <aside class="notice">
-Requires &lsquo;BL:Api:Members:Update&rsquo; permit
+Requires <code>BL:Api:Members:Update</code> permit
 </aside>
 
-<h2 id="remove-member">Remove member</h2>
+<!--- ############################################################################################################# --->
 
-<p>Removes member from loyalty club.</p>
+<h2 id="members-destroy"><a name="v3-members-destroy"></a> Members &bull; Destroy</h2>
+
+<p><strong>DELETE</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
+
+<p>Permanently removes member.</p>
 
 <p>It is possible to trigger optout message by setting <code class="prettyprint">send_unsubscribe_message=true</code> query string parameter.
 Same as welcome messages, optout messages sending also depends on Loyalty Club and Product configuration.</p>
 
-<h3 id="http-request">HTTP Request</h3>
+<blockquote>
+<p>Example:</p>
+</blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X DELETE <span class="se">\</span>
-    <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/:id"</span> <span class="se">\</span>
+    <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id"</span> <span class="se">\</span>
     -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
-    -H <span class="s1">'X-Authorization-Token: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+    -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
     -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
     -H <span class="s1">'X-User-Agent: CURL manual test'</span>
 </code></pre>
 <blockquote>
-<p>When successful, the above command returns JSON as depicted in &ldquo;Get member&rdquo; section</p>
+<p>When successful, the above command returns destroyed member object as depicted <a href="#v3-member-model">here</a></p>
 </blockquote>
-
-<p><strong>DELETE</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id</code></p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -2199,15 +2518,13 @@ Same as welcome messages, optout messages sending also depends on Loyalty Club a
 <tr>
 <th>Parameter</th>
 <th>Description</th>
+<th>Type</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>loyalty_club_slug</td>
-<td>unique slugified name of the loyalty club. Example: <code class="prettyprint">boosters</code>.</td>
-</tr>
-<tr>
 <td>id</td>
-<td>member&rsquo;s ID.</td>
+<td>Member&rsquo;s ID</td>
+<td>integer</td>
 </tr>
 </tbody></table>
 
@@ -2231,16 +2548,244 @@ Same as welcome messages, optout messages sending also depends on Loyalty Club a
 </tr>
 </tbody></table>
 
-<h3 id="responses">Responses</h3>
+<h3 id="response-json-object">Response (JSON object)</h3>
 
-<ul>
-<li><strong>200</strong> - Destroyed member JSON object</li>
-<li><strong>404 Not found</strong> - member could not be found</li>
-</ul>
+<p>Properties of member that has been destroyed - see: <a href="#v3-member-model">Member model</a></p>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">404</code></td>
+<td>Member could not be found</td>
+</tr>
+<tr>
+<td><code class="prettyprint">422</code></td>
+<td><a href="#validation-on-members">validation errors</a> JSON object.</td>
+</tr>
+</tbody></table>
 
 <aside class="notice">
-Requires &lsquo;BL:Api:Members:Destroy&rsquo; permit
+Requires <code>BL:Api:Members:Destroy</code> permit
 </aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="members-send-token"><a name="v3-members-send-token"></a> Members &bull; Send Token</h2>
+
+<aside class="warn">
+Not implemented yet
+</aside>
+
+<p><strong>Member tokens</strong> are used to authenticate actions on particular members.
+<strong>Member token</strong> could be issued even before registering enduser as a member in community.
+In that case we create temporary token that is valid till end of day.
+That <strong>member token</strong> could be used to authenticate <em>Create Member</em> action described below.</p>
+
+<p>It sends member token to the user via SMS.</p>
+
+<p>It can be used multiple times.</p>
+
+<p>If msisdn is not valid, then <code class="prettyprint">400 Bad Request</code> is returned.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><strong>POST</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token</code></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>msisdn</td>
+<td>unique member&rsquo;s msisdn as defined <a href="#msisdn-member-identifier">here</a>) Example: <code class="prettyprint">4740485124</code>.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Authentication with <code>X-Client-Authorization</code> or <code>X-Customer-Private-Token</code>.
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="me-get"><a name="v3-me-get"></a> Me &bull; Get</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id"</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
+  -H <span class="s1">'Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522'</span>
+</code></pre>
+<blockquote>
+<p>Responses as same as in <a href="#v3-members-get">Members &bull; Get</a></p>
+</blockquote>
+
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/me</code></p>
+
+<p>Returns &ldquo;current&rdquo; member - the one related with given OAuth token object.</p>
+
+<p>As a member-related action, it requires member authorization. See <a href="#v3-oauth2">OAuth</a>.</p>
+
+<h3 id="response-json-object">Response (JSON object)</h3>
+
+<p>See: <a href="#v3-member-model">Member model</a></p>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">404</code></td>
+<td>Member associated with given Authorization token does not exist</td>
+</tr>
+<tr>
+<td><code class="prettyprint">460</code></td>
+<td>Member not authorized (Invalid or expired OAuth token)</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Members:OAuth:Get</code> permit.
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="me-update"><a name="v3-me-update"></a> Me &bull; Update</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X PUT <span class="se">\</span>
+  https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
+  -H <span class="s1">'Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522'</span> <span class="se">\</span>
+  -d <span class="s1">'{
+    "properties": {
+        "last_name": "Doge"
+    },
+    "password": "new_password"
+}'</span>
+</code></pre>
+<blockquote>
+<p>Responses are same as in <a href="#v3-members-update">Members &bull; Update</a></p>
+</blockquote>
+
+<p><strong>PUT</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/me</code></p>
+
+<p>Updates &ldquo;current&rdquo; member - the one related with given OAuth token object.</p>
+
+<p>As a member-related action, it requires member authorization. See <a href="#v3-oauth2">OAuth</a>.</p>
+
+<h3 id="parameters">Parameters</h3>
+
+<p>It accepts same PUT and URL parameters as in <a href="#v3-members-update">Members &bull; Update</a>.</p>
+
+<h3 id="response-json-object">Response (JSON object)</h3>
+
+<p>Same as in <a href="#v3-members-update">Members &bull; Update</a>.</p>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">404</code></td>
+<td>Member associated with given Authorization token does not exist</td>
+</tr>
+<tr>
+<td><code class="prettyprint">422</code></td>
+<td><a href="#validation-on-members">Validation errors</a> JSON object.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">460</code></td>
+<td>Member not authorized (Invalid or expired OAuth token)</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Members:OAuth:Update</code> permit.
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="me-destroy"><a name="v3-me-destroy"></a> Me &bull; Destroy</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X DELETE <span class="se">\</span>
+    <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id"</span> <span class="se">\</span>
+    -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+    -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+    -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+    -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
+    -H <span class="s1">'Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522'</span> <span class="se">\</span>
+</code></pre>
+<blockquote>
+<p>Response as same as in <a href="#v3-members-destroy">Members &bull; Destroy</a></p>
+</blockquote>
+
+<p><strong>DELETE</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/me</code></p>
+
+<p>Permanently removes &ldquo;current&rdquo; member - the one related with given OAuth token object.</p>
+
+<p>As a member-related action, it requires member authorization. See <a href="#v3-oauth2">OAuth</a>.</p>
+
+<h3 id="parameters">Parameters</h3>
+
+<p>It accepts same URL &amp; query parameters as in <a href="#v3-members-destroy">Members &bull; Destroy</a>.</p>
+
+<h3 id="response-json-object">Response (JSON object)</h3>
+
+<p>Same as in <a href="#v3-members-destroy">Members &bull; Destroy</a>.</p>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">404</code></td>
+<td>Member associated with given Authorization token does not exist</td>
+</tr>
+<tr>
+<td><code class="prettyprint">460</code></td>
+<td>Member not authorized (Invalid or expired OAuth token)</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Members:OAuth:Destroy</code> permit.
+</aside>
+
+<!--- ############################################################################################################# --->
 
       </div>
       <div class="dark-box">
