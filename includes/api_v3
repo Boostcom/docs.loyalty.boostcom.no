@@ -47,7 +47,7 @@ may be restricted.</p>
 <h3 id="oauth2"><a name="v3-oauth2"></a> OAuth2</h3>
 
 <blockquote>
-<p>Example header: <code class="prettyprint">X-Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522</code></p>
+<p>Example header: <code class="prettyprint">Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522</code></p>
 </blockquote>
 
 <p>Actions related to specific member (the one that is using your application) require to have member authenticated and we implement
