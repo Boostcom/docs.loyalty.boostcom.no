@@ -139,7 +139,7 @@ curl -X POST "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/member
   -d '{
       "grant_type": "password",
       "identifier_type": "id",
-      "identifier": 44444444,
+      "identifier": 42,
       "password": "123"
     }'
 ```
