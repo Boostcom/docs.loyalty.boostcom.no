@@ -2579,7 +2579,7 @@ Requires <code>BL:Api:Members:Destroy</code> permit
 <h2 id="members-send-token"><a name="v3-members-send-token"></a> Members &bull; Send Token</h2>
 
 <aside class="warn">
-Not implemented yet
+Draft  - Not implemented yet
 </aside>
 
 <p><strong>Member tokens</strong> are used to authenticate actions on particular members.
@@ -2622,7 +2622,7 @@ Authentication with <code>X-Client-Authorization</code> or <code>X-Customer-Priv
 <blockquote>
 <p>Example:</p>
 </blockquote>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id"</span> <span class="se">\</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/me"</span> <span class="se">\</span>
   -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
   -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
   -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
@@ -2635,7 +2635,7 @@ Authentication with <code>X-Client-Authorization</code> or <code>X-Customer-Priv
 
 <p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/me</code></p>
 
-<p>Returns &ldquo;current&rdquo; member - the one related with given OAuth token object.</p>
+<p>Returns &ldquo;current&rdquo; member - the one that given Authorization token has been issued for.</p>
 
 <p>As a member-related action, it requires member authorization. See <a href="#v3-oauth2">OAuth</a>.</p>
 
@@ -2673,7 +2673,7 @@ Requires <code>BL:Api:Members:OAuth:Get</code> permit.
 <p>Example:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X PUT <span class="se">\</span>
-  https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id <span class="se">\</span>
+  https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/me <span class="se">\</span>
   -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
   -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
   -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
@@ -2692,7 +2692,7 @@ Requires <code>BL:Api:Members:OAuth:Get</code> permit.
 
 <p><strong>PUT</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/me</code></p>
 
-<p>Updates &ldquo;current&rdquo; member - the one related with given OAuth token object.</p>
+<p>Updates &ldquo;&quot;current&rdquo; member - the one that given Authorization token has been issued for.</p>
 
 <p>As a member-related action, it requires member authorization. See <a href="#v3-oauth2">OAuth</a>.</p>
 
@@ -2738,7 +2738,7 @@ Requires <code>BL:Api:Members:OAuth:Update</code> permit.
 <p>Example:</p>
 </blockquote>
 <pre class="highlight shell tab-shell"><code>curl -X DELETE <span class="se">\</span>
-    <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id"</span> <span class="se">\</span>
+    <span class="s2">"https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/me"</span> <span class="se">\</span>
     -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
     -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
     -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
@@ -2751,7 +2751,7 @@ Requires <code>BL:Api:Members:OAuth:Update</code> permit.
 
 <p><strong>DELETE</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/me</code></p>
 
-<p>Permanently removes &ldquo;current&rdquo; member - the one related with given OAuth token object.</p>
+<p>Permanently removes &ldquo;current&rdquo; member - the one that given Authorization token has been issued for.</p>
 
 <p>As a member-related action, it requires member authorization. See <a href="#v3-oauth2">OAuth</a>.</p>
 
