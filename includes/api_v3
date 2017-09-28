@@ -215,7 +215,7 @@ OAuth2 flow for this.</p>
   -d <span class="s1">'{
       "grant_type": "password",
       "identifier_type": "id",
-      "identifier": 44444444,
+      "identifier": 42,
       "password": "123"
     }'</span>
 </code></pre>
