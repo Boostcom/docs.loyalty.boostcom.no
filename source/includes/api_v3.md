@@ -8,7 +8,7 @@ You can use Api V3 only when your customer is migrated to new backend service fo
 
 ### Product
 
-> Example header: `X-Product-Name: ios-app`
+> Example header: `X-Product-Name: android-app`
 
 Each system that is communicating with us should uniquely identify itself so it is possible to distinguish optin/update channels.
 That will allow further targeting members by communication channel.
@@ -282,7 +282,7 @@ curl -X POST "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/member
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
   -H 'X-User-Agent: CURL manual test' \
-  -H 'X-Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522'
+  -H 'Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522'
 
 ```
 
