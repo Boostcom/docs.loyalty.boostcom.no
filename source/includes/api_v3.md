@@ -40,7 +40,7 @@ It should be arbitrarily chosen to represent client specifics (e.g. 'Infinity Ma
 
 ### <a name="v3-oauth2"></a> OAuth2
 
-> Example header: `X-Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522`
+> Example header: `Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522`
 
 Actions related to specific member (the one that is using your application) require to have member authenticated and we implement
 OAuth2 flow for this.
