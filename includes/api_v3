@@ -9,7 +9,7 @@
 <h3 id="product">Product</h3>
 
 <blockquote>
-<p>Example header: <code class="prettyprint">X-Product-Name: ios-app</code></p>
+<p>Example header: <code class="prettyprint">X-Product-Name: android-app</code></p>
 </blockquote>
 
 <p>Each system that is communicating with us should uniquely identify itself so it is possible to distinguish optin/update channels.
@@ -440,7 +440,7 @@ Requires <code>BL:Api:Members:OAuth</code> permit
   -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
   -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
   -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522'</span>
+  -H <span class="s1">'Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522'</span>
 
 </code></pre>
 <blockquote>
