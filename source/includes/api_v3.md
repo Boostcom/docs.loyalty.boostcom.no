@@ -708,7 +708,7 @@ Requires <code>BL:Api:Members:Destroy</code> permit
 ## <a name="v3-members-send-token"></a> Members &bull; Send Token
 
 <aside class="warn">
-Not implemented yet
+Draft  - Not implemented yet
 </aside>
 
 **Member tokens** are used to authenticate actions on particular members.
@@ -743,7 +743,7 @@ Authentication with <code>X-Client-Authorization</code> or <code>X-Customer-Priv
 > Example:
 
 ```shell
-curl "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id" \
+curl "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/me" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -755,7 +755,7 @@ curl "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id" \
 
 **GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/me`
 
-Returns "current" member - the one related with given OAuth token object.
+Returns "current" member - the one that given Authorization token has been issued for.
 
 As a member-related action, it requires member authorization. See [OAuth](#v3-oauth2).
 
@@ -782,7 +782,7 @@ Requires <code>BL:Api:Members:OAuth:Get</code> permit.
 
 ```shell
 curl -X PUT \
-  https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id \
+  https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/me \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -800,7 +800,7 @@ curl -X PUT \
 
 **PUT** `api/v3/loyalty_clubs/:loyalty_club_slug/members/me`
 
-Updates "current" member - the one related with given OAuth token object.
+Updates ""current" member - the one that given Authorization token has been issued for.
 
 As a member-related action, it requires member authorization. See [OAuth](#v3-oauth2).
 
@@ -832,7 +832,7 @@ Requires <code>BL:Api:Members:OAuth:Update</code> permit.
 
 ```shell
 curl -X DELETE \
-    "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id" \
+    "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/me" \
     -H 'Content-Type: application/json' \
     -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
     -H 'X-Product-Name: default' \
@@ -844,7 +844,7 @@ curl -X DELETE \
 
 **DELETE** `api/v3/loyalty_clubs/:loyalty_club_slug/members/me`
 
-Permanently removes "current" member - the one related with given OAuth token object.
+Permanently removes "current" member - the one that given Authorization token has been issued for.
 
 As a member-related action, it requires member authorization. See [OAuth](#v3-oauth2).
 
