@@ -69,7 +69,7 @@ Status | Reason
 -------|-----|-------
 `400` | Some of required header is missing
 `401` | `X-Client-Authorization` is invalid (or doesn't match provided loyalty club or product)
-`403` | Not authorized to perform this action (no permit)
+`403` | Not authorized to perform this action (provided `X-Authorization-Token` doesn't have required permit)
 `404` | The requested resource doesn't exist
 `422` | Invalid parameters are provided (e.g. incorrect properties on member creation)
 `460` | OAuth token required for the action is invalid (applies only to OAuth-related actions - see [OAuth2](#v3-oauth2))
