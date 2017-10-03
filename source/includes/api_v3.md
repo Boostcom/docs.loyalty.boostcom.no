@@ -231,7 +231,7 @@ Requires <code>BL:Api:Members:OAuth</code> permit
 
 <!--- ############################################################################################################# --->
 
-## <a name="v3-token-create"></a> OAuth Token &bull; Revoke
+## <a name="v3-token-revoke"></a> OAuth Token &bull; Revoke
 
 > Example:
 
