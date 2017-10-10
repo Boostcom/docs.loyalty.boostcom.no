@@ -6,6 +6,12 @@
 
 You can use Api V3 only when your customer is migrated to new backend service for data.
 
+## Hosts
+
+Production: [https://bpc-api.boostcom.no](https://bpc-api.boostcom.no)
+
+Staging: [https://bpc-api.stg.boostcom.no](https://bpc-api.stg.boostcom.no)
+
 ### Product
 
 > Example header: `X-Product-Name: android-app`
@@ -131,7 +137,7 @@ updated_at | Time when the user was last updated | string
 > Create token example:
 
 ```shell
-curl -X POST "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/oauth/token" \
+curl -X POST "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/oauth/token" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -147,7 +153,7 @@ curl -X POST "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/member
 > Refresh token example:
 
 ```shell
-curl -X POST "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/oauth/token" \
+curl -X POST "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/oauth/token" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -236,7 +242,7 @@ Requires <code>BL:Api:Members:OAuth</code> permit
 > Example:
 
 ```shell
-curl -X POST "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/oauth/revoke" \
+curl -X POST "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/oauth/revoke" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -277,7 +283,7 @@ Requires <code>BL:Api:Members:OAuth</code> permit
 > Example:
 
 ```shell
-curl -X POST "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/oauth/token/info" \
+curl -X POST "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/oauth/token/info" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -331,7 +337,7 @@ Requires <code>BL:Api:Members:OAuth</code> permit
 > Example
 
 ```shell
-curl "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/member_schema" \
+curl "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/member_schema" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -414,7 +420,7 @@ Requires <code>BL:Api:Schema:Get</code> permit
 > Example:
 
 ```shell
-curl -I "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id" \
+curl -I "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/:id" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -462,7 +468,7 @@ Requires <code>BL:Api:Members:Check</code> permit
 > Example:
 
 ```shell
-curl "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id" \
+curl "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/:id" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -510,7 +516,7 @@ Requires <code>BL:Api:Members:Get</code> permit
 ```shell
 
 curl -X POST \
-  https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members \
+  https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -595,7 +601,7 @@ Requires <code>BL:Api:Members:Create</code> permit
 ```shell
 
 curl -X PUT \
-  https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id \
+  https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/:id \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -667,7 +673,7 @@ Same as welcome messages, optout messages sending also depends on Loyalty Club a
 
 ```shell
 curl -X DELETE \
-    "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/:id" \
+    "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/:id" \
     -H 'Content-Type: application/json' \
     -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
     -H 'X-Product-Name: default' \
@@ -743,7 +749,7 @@ Authentication with <code>X-Client-Authorization</code> or <code>X-Customer-Priv
 > Example:
 
 ```shell
-curl "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/me" \
+curl "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/me" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -782,7 +788,7 @@ Requires <code>BL:Api:Members:OAuth:Get</code> permit.
 
 ```shell
 curl -X PUT \
-  https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/me \
+  https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/me \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -832,7 +838,7 @@ Requires <code>BL:Api:Members:OAuth:Update</code> permit.
 
 ```shell
 curl -X DELETE \
-    "https://connect.bstcm.no/api/v3/loyalty_clubs/infinity-mall/members/me" \
+    "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/me" \
     -H 'Content-Type: application/json' \
     -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
     -H 'X-Product-Name: default' \
