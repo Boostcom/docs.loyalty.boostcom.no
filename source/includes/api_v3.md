@@ -1,4 +1,4 @@
-# Api V3 reference (draft, work in progress)
+# Api V3 reference (work in progress)
 
 ## General info
 
@@ -6,7 +6,7 @@
 
 You can use Api V3 only when your customer is migrated to new backend service for data.
 
-## Hosts
+### Hosts
 
 Production: [https://bpc-api.boostcom.no](https://bpc-api.boostcom.no)
 
@@ -264,7 +264,7 @@ curl -X POST "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/mem
 
 Revokes a token (access or refresh). 
 
-Always returns an empty response (even if given token is invalid).
+Always returns an empty JSON object (even if given token is invalid).
 
 ### POST Parameters (JSON)
 
@@ -420,7 +420,7 @@ Requires <code>BL:Api:Schema:Get</code> permit
 > Example:
 
 ```shell
-curl -I "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/:id" \
+curl "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/:id/check_existence" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -711,35 +711,41 @@ Requires <code>BL:Api:Members:Destroy</code> permit
 
 <!--- ############################################################################################################# --->
 
-## <a name="v3-members-send-token"></a> Members &bull; Send Token
+## <a name="v3-members-send-password-reset-link"></a> Members &bull; Send password reset link
 
-<aside class="warn">
-Draft  - Not implemented yet
-</aside>
+> Example:
 
-**Member tokens** are used to authenticate actions on particular members.
-**Member token** could be issued even before registering enduser as a member in community.
-In that case we create temporary token that is valid till end of day.
-That **member token** could be used to authenticate *Create Member* action described below.
+```shell
+curl "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/send_password_reset_link" \
+  -H 'Content-Type: application/json' \
+  -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
+  -H 'X-Product-Name: default' \
+  -H 'X-User-Agent: CURL manual test'
+```
 
-It sends member token to the user via SMS.
 
-It can be used multiple times.
+> Always returns an empty JSON object
 
-If msisdn is not valid, then `400 Bad Request` is returned.
+```json
+{
+  // Empty object
+}
+```
 
-### HTTP Request
+**POST** `/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/send_password_reset_link`
 
-**POST** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:msisdn/send_token`
+Sends password reset link to given e-mail address if it is associated with member in given loyalty club.
+
+The e-mail contains a token generated for member, valid for 24 hours.
 
 ### URL Parameters
 
-Parameter | Description
---------- | -----------
-msisdn | unique member's msisdn as defined [here](#msisdn-member-identifier)) Example: `4740485124`.
+Parameter | Description | Type
+--------- | ----------- | ------
+email | Member's email | string (email)
 
 <aside class="notice">
-Authentication with <code>X-Client-Authorization</code> or <code>X-Customer-Private-Token</code>.
+Requires <code>BL:Api:Members:Tokens:Create</code> permit
 </aside>
 
 <!--- ############################################################################################################# --->
