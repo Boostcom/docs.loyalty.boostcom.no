@@ -723,7 +723,6 @@ curl "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_
   -H 'X-User-Agent: CURL manual test'
 ```
 
-
 > Always returns an empty JSON object
 
 ```json
@@ -746,6 +745,56 @@ email | Member's email | string (email)
 
 <aside class="notice">
 Requires <code>BL:Api:Members:Tokens:Create</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
+## <a name="v3-members-send-password-reset-link"></a> Members &bull; Verify token
+
+> Example:
+
+```shell
+curl "https://bpc-api.boostcom.no/api/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/verify_token/password_reset/jfp1jd1jd" \
+  -H 'Content-Type: application/json' \
+  -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
+  -H 'X-Product-Name: default' \
+  -H 'X-User-Agent: CURL manual test'
+```
+
+> Example response:
+
+```json
+{
+  "valid": true
+}
+```
+
+**GET** `/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/verify_token/:type/:token`
+
+Verifies given member token. Returns response indicating if given token is (still) valid.
+
+### URL Parameters
+
+Parameter | Description | Type
+--------- | ----------- | ------
+email | Member's email | string (email)
+type | Token type | `password_reset` (more types in future) 
+token | Token | string
+
+### Response (JSON object)
+
+Key | Type
+--------- | ---------
+valid | boolean
+
+### Error responses
+
+Status | Reason
+--------- | ----------- 
+`400` | Invalid `type`
+
+<aside class="notice">
+Requires <code>BL:Api:Members:Tokens:Verify</code> permit
 </aside>
 
 <!--- ############################################################################################################# --->
