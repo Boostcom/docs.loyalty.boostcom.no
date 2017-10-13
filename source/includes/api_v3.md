@@ -228,8 +228,8 @@ resource_owner_id | ID of member that the token has been for | integer
 
 Status | Reason
 --------- | ----------- 
-`421` | Invalid member credentials provided for `password` grant. Either member could not be found or password is wrong
-`422` | Invalid refresh_token provided for `refresh_token` grant (may be expired)
+`461` | Invalid member credentials provided for `password` grant. Either member could not be found or password is wrong
+`462` | Invalid refresh_token provided for `refresh_token` grant (may be expired)
 
 <aside class="notice">
 Requires <code>BL:Api:Members:OAuth</code> permit
