@@ -372,11 +372,11 @@ OAuth2 flow for this.</p>
 </tr>
 </thead><tbody>
 <tr>
-<td><code class="prettyprint">421</code></td>
+<td><code class="prettyprint">461</code></td>
 <td>Invalid member credentials provided for <code class="prettyprint">password</code> grant. Either member could not be found or password is wrong</td>
 </tr>
 <tr>
-<td><code class="prettyprint">422</code></td>
+<td><code class="prettyprint">462</code></td>
 <td>Invalid refresh_token provided for <code class="prettyprint">refresh_token</code> grant (may be expired)</td>
 </tr>
 </tbody></table>
