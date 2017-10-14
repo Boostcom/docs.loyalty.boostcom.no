@@ -953,13 +953,13 @@ curl -X PUT <span class="se">\</span>
   -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
   -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
   -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
-  -d <span class="s1">'{
+  -d <span class="se">\</span>
+  <span class="s1">'{
     "properties": {
-        "last_name": "Doge"
+      "last_name": "Doge"
     },
     "password": "new_password"
-}'</span>
-
+  }'</span>
 </code></pre>
 <blockquote>
 <p>When successful, the above command returns updated member object as depicted <a href="#v3-member-model">here</a></p>
@@ -974,6 +974,9 @@ curl -X PUT <span class="se">\</span>
 <p>It is intended for partial updates - not given properties are neither deleted nor overwritten.</p>
 
 <p>If deleting attribute is intended, it&rsquo;s value should be sent as <code class="prettyprint">null</code>.</p>
+
+<p>This endpoint may return validation errors (<code class="prettyprint">422</code>) because of current member data invalidity 
+as loyalty club schema may get changed over time and make existing users invalid.   </p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -1036,7 +1039,7 @@ curl -X PUT <span class="se">\</span>
 <table><thead>
 <tr>
 <th>Status</th>
-<th>Reason</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
@@ -1166,6 +1169,9 @@ Requires <code>BL:Api:Members:Destroy</code> permit
 
 <p>The e-mail contains a token generated for member, valid for 24 hours.</p>
 
+<p>The token can be then used to reset password with <a href="#v3-members-reset-password">Members &bull; Reset password</a>.
+It also may be verified with <a href="#v3-members-verify-token">Members &bull; Verify token</a></p>
+
 <h3 id="url-parameters">URL Parameters</h3>
 
 <table><thead>
@@ -1188,12 +1194,12 @@ Requires <code>BL:Api:Members:Tokens:Create</code> permit
 
 <!--- ############################################################################################################# --->
 
-<h2 id="members-verify-token"><a name="v3-members-send-password-reset-link"></a> Members &bull; Verify token</h2>
+<h2 id="members-verify-token"><a name="v3-members-verify-token"></a> Members &bull; Verify token</h2>
 
 <blockquote>
 <p>Example:</p>
 </blockquote>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://bpc-api.boostcom.no/api/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/verify_token/password_reset/jfp1jd1jd"</span> <span class="se">\</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/verify_token/password_reset/k4wort03j2"</span> <span class="se">\</span>
   -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
   -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
   -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
@@ -1270,6 +1276,87 @@ Requires <code>BL:Api:Members:Tokens:Verify</code> permit
 
 <!--- ############################################################################################################# --->
 
+<h2 id="members-reset-password"><a name="v3-members-reset-password"></a> Members &bull; Reset password</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X PUT <span class="se">\</span>
+  <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/reset_password"</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
+  -d <span class="se">\</span>
+    <span class="s1">'{
+      "password": "new_password",
+      "token": "k4wort03j2"
+    }'</span>
+</code></pre>
+<blockquote>
+<p>When successful, returns an empty object:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="err">Empty</span><span class="w"> </span><span class="err">object</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>PUT</strong> <code class="prettyprint">/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/reset_password</code></p>
+
+<p>Updates given member password with if token is valid.</p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>password</td>
+<td>Member&rsquo;s new password</td>
+<td>string</td>
+</tr>
+<tr>
+<td>token</td>
+<td>Confirmation token generated and sent with <a href="#v3-members-send-password-reset-link">Members &bull; Send password reset link</a></td>
+<td>string</td>
+</tr>
+</tbody></table>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">400</code></td>
+<td><code class="prettyprint">password</code> or <code class="prettyprint">token</code> param is missing</td>
+</tr>
+<tr>
+<td><code class="prettyprint">404</code></td>
+<td>Member could not be found</td>
+</tr>
+<tr>
+<td><code class="prettyprint">422</code></td>
+<td>Invalid password - returns <a href="#validation-on-members">validation errors</a> JSON object.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">463</code></td>
+<td>Invalid confirmation token</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Members:ResetPassword</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
 <h2 id="me-get"><a name="v3-me-get"></a> Me &bull; Get</h2>
 
 <blockquote>
@@ -1332,12 +1419,13 @@ Requires <code>BL:Api:Members:OAuth:Get</code> permit.
   -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
   -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
   -H <span class="s1">'Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522'</span> <span class="se">\</span>
-  -d <span class="s1">'{
-    "properties": {
-        "last_name": "Doge"
-    },
-    "password": "new_password"
-}'</span>
+  -d <span class="se">\</span>
+  <span class="s1">'{
+      "properties": {
+          "last_name": "Doge"
+      },
+      "password": "new_password"
+  }'</span>
 </code></pre>
 <blockquote>
 <p>Responses are same as in <a href="#v3-members-update">Members &bull; Update</a></p>
@@ -1345,9 +1433,12 @@ Requires <code>BL:Api:Members:OAuth:Get</code> permit.
 
 <p><strong>PUT</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/me</code></p>
 
-<p>Updates &ldquo;&quot;current&rdquo; member - the one that given Authorization token has been issued for.</p>
+<p>Updates &ldquo;current&rdquo; member - the one that given Authorization token has been issued for.</p>
 
 <p>As a member-related action, it requires member authorization. See <a href="#v3-oauth2">OAuth</a>.</p>
+
+<p>This endpoint may return validation errors (<code class="prettyprint">422</code>) because of current member data invalidity 
+as loyalty club schema may get changed over time and make existing users invalid.   </p>
 
 <h3 id="parameters">Parameters</h3>
 
@@ -1381,6 +1472,82 @@ Requires <code>BL:Api:Members:OAuth:Get</code> permit.
 
 <aside class="notice">
 Requires <code>BL:Api:Members:OAuth:Update</code> permit.
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="me-update-password"><a name="v3-me-update-password"></a> Me &bull; Update password</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X PUT <span class="se">\</span>
+  https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/me/update_password <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
+  -H <span class="s1">'Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522'</span> <span class="se">\</span>
+  -d <span class="se">\</span>
+  <span class="s1">'{
+      "password": "new_password"
+  }'</span>
+</code></pre>
+<blockquote>
+<p>Always returns an empty object</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="err">Empty</span><span class="w"> </span><span class="err">object</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>PUT</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/update_password</code></p>
+
+<p>Updates &ldquo;current&rdquo; member (the one that given Authorization token has been issued for) password.</p>
+
+<p>As a member-related action, it requires member authorization. See <a href="#v3-oauth2">OAuth</a>.</p>
+
+<p>In opposition to <a href="#v3-me-update">Me &bull; Update</a>, it does not validate current user data, only given password.</p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>password</td>
+<td>Member&rsquo;s new password</td>
+<td>string</td>
+</tr>
+</tbody></table>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">404</code></td>
+<td>Member associated with given Authorization token does not exist</td>
+</tr>
+<tr>
+<td><code class="prettyprint">422</code></td>
+<td>Invalid password - returns <a href="#validation-on-members">validation errors</a> JSON object.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">460</code></td>
+<td>Member not authorized (Invalid or expired OAuth token)</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Members:OAuth:UpdatePassword</code> permit.
 </aside>
 
 <!--- ############################################################################################################# --->
