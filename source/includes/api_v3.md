@@ -606,13 +606,13 @@ curl -X PUT \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
   -H 'X-User-Agent: CURL manual test' \
-  -d '{
-	"properties": {
-		"last_name": "Doge"
-	},
-	"password": "new_password"
-}'
-
+  -d \
+  '{
+    "properties": {
+      "last_name": "Doge"
+    },
+    "password": "new_password"
+  }'
 ```
 
 > When successful, the above command returns updated member object as depicted [here](#v3-member-model)
@@ -626,6 +626,9 @@ Update member's properties with given ones.
 It is intended for partial updates - not given properties are neither deleted nor overwritten.
 
 If deleting attribute is intended, it's value should be sent as `null`.
+
+This endpoint may return validation errors (`422`) because of current member data invalidity 
+as loyalty club schema may get changed over time and make existing users invalid.   
 
 ### URL Parameters
 
@@ -649,7 +652,7 @@ Member properties after update - see: [Member model](#v3-member-model)
 
 ### Error responses
 
-Status | Reason
+Status | Description
 --------- | ----------- 
 `404` | Member could not be found
 `422` | [validation errors](#validation-on-members) JSON object.
@@ -737,6 +740,9 @@ Sends password reset link to given e-mail address if it is associated with membe
 
 The e-mail contains a token generated for member, valid for 24 hours.
 
+The token can be then used to reset password with [Members &bull; Reset password](#v3-members-reset-password).
+It also may be verified with [Members &bull; Verify token](#v3-members-verify-token)
+
 ### URL Parameters
 
 Parameter | Description | Type
@@ -749,12 +755,12 @@ Requires <code>BL:Api:Members:Tokens:Create</code> permit
 
 <!--- ############################################################################################################# --->
 
-## <a name="v3-members-send-password-reset-link"></a> Members &bull; Verify token
+## <a name="v3-members-verify-token"></a> Members &bull; Verify token
 
 > Example:
 
 ```shell
-curl "https://bpc-api.boostcom.no/api/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/verify_token/password_reset/jfp1jd1jd" \
+curl "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/verify_token/password_reset/k4wort03j2" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -795,6 +801,58 @@ Status | Reason
 
 <aside class="notice">
 Requires <code>BL:Api:Members:Tokens:Verify</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
+## <a name="v3-members-reset-password"></a> Members &bull; Reset password
+
+> Example:
+
+```shell
+curl -X PUT \
+  "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/reset_password" \
+  -H 'Content-Type: application/json' \
+  -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
+  -H 'X-Product-Name: default' \
+  -H 'X-User-Agent: CURL manual test' \
+  -d \
+    '{
+      "password": "new_password",
+      "token": "k4wort03j2"
+    }'
+```
+
+> When successful, returns an empty object:
+
+```json
+{
+  // Empty object
+}
+```
+
+**PUT** `/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/reset_password`
+
+Updates given member password with if token is valid.
+
+### URL Parameters
+
+Parameter | Description | Type
+--------- | ----------- | ------
+password | Member's new password | string
+token | Confirmation token generated and sent with [Members &bull; Send password reset link](#v3-members-send-password-reset-link) | string
+
+### Error responses
+
+Status | Reason
+--------- | ----------- 
+`400` | `password` or `token` param is missing
+`404` | Member could not be found
+`422` | Invalid password - returns [validation errors](#validation-on-members) JSON object.
+`463` | Invalid confirmation token
+
+<aside class="notice">
+Requires <code>BL:Api:Members:ResetPassword</code> permit
 </aside>
 
 <!--- ############################################################################################################# --->
@@ -849,21 +907,25 @@ curl -X PUT \
   -H 'X-Product-Name: default' \
   -H 'X-User-Agent: CURL manual test' \
   -H 'Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522' \
-  -d '{
-	"properties": {
-		"last_name": "Doge"
-	},
-	"password": "new_password"
-}'
+  -d \
+  '{
+	  "properties": {
+		  "last_name": "Doge"
+	  },
+	  "password": "new_password"
+  }'
 ```
 
 > Responses are same as in [Members &bull; Update](#v3-members-update)
 
 **PUT** `api/v3/loyalty_clubs/:loyalty_club_slug/members/me`
 
-Updates ""current" member - the one that given Authorization token has been issued for.
+Updates "current" member - the one that given Authorization token has been issued for.
 
 As a member-related action, it requires member authorization. See [OAuth](#v3-oauth2).
+
+This endpoint may return validation errors (`422`) because of current member data invalidity 
+as loyalty club schema may get changed over time and make existing users invalid.   
 
 ### Parameters
 
@@ -883,6 +945,60 @@ Status | Reason
 
 <aside class="notice">
 Requires <code>BL:Api:Members:OAuth:Update</code> permit.
+</aside>
+
+<!--- ############################################################################################################# --->
+
+## <a name="v3-me-update-password"></a> Me &bull; Update password
+
+> Example:
+
+```shell
+curl -X PUT \
+  https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/me/update_password \
+  -H 'Content-Type: application/json' \
+  -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
+  -H 'X-Product-Name: default' \
+  -H 'X-User-Agent: CURL manual test' \
+  -H 'Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522' \
+  -d \
+  '{
+	  "password": "new_password"
+  }'
+```
+
+> Always returns an empty object
+
+```json
+{
+  // Empty object
+}
+```
+
+**PUT** `api/v3/loyalty_clubs/:loyalty_club_slug/members/update_password`
+
+Updates "current" member (the one that given Authorization token has been issued for) password.
+
+As a member-related action, it requires member authorization. See [OAuth](#v3-oauth2).
+
+In opposition to [Me &bull; Update](#v3-me-update), it does not validate current user data, only given password.
+
+### URL Parameters
+
+Parameter | Description | Type
+--------- | ----------- | ------
+password | Member's new password | string
+
+### Error responses
+
+Status | Reason
+--------- | -----------
+`404` | Member associated with given Authorization token does not exist
+`422` | Invalid password - returns [validation errors](#validation-on-members) JSON object.
+`460` | Member not authorized (Invalid or expired OAuth token)
+
+<aside class="notice">
+Requires <code>BL:Api:Members:OAuth:UpdatePassword</code> permit.
 </aside>
 
 <!--- ############################################################################################################# --->
