@@ -519,7 +519,8 @@ curl -X POST \
   https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
-  -H 'X-Product-Name: default' \
+  -H 'X-Product-Name: facebook' \
+  -H 'X-Subproduct-Name: campaign-10-2017' \
   -H 'X-User-Agent: CURL manual test' \
   -d '{
 	"properties": {
@@ -560,6 +561,12 @@ For example, even if send_email_welcome_message:true param is provided, message 
 or Loyalty has disabled welcome messages or Loyalty Club has no e-mails configured at all.
 
 There is also a possibility to have multiple SMS welcome messages sent. The one that matches Product or default one will be sent.
+
+### Headers
+
+Header name | Required? | Description
+------ | --------- | -----------
+X-Subproduct-Name | no | Additional source/optin channel information
 
 ### POST Parameters (JSON)
 
