@@ -792,7 +792,8 @@ curl -X POST <span class="se">\</span>
   https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members <span class="se">\</span>
   -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
   -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: facebook'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Subproduct-Name: campaign-10-2017'</span> <span class="se">\</span>
   -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
   -d <span class="s1">'{
     "properties": {
@@ -831,6 +832,22 @@ For example, even if send_email_welcome_message:true param is provided, message 
 or Loyalty has disabled welcome messages or Loyalty Club has no e-mails configured at all.</p>
 
 <p>There is also a possibility to have multiple SMS welcome messages sent. The one that matches Product or default one will be sent.</p>
+
+<h3 id="headers">Headers</h3>
+
+<table><thead>
+<tr>
+<th>Header name</th>
+<th>Required?</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>X-Subproduct-Name</td>
+<td>no</td>
+<td>Additional source/optin channel information</td>
+</tr>
+</tbody></table>
 
 <h3 id="post-parameters-json">POST Parameters (JSON)</h3>
 
