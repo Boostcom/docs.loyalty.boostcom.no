@@ -529,7 +529,7 @@ curl -X POST \
 		"first_name": "The",
 		"last_name": "Doge"
 	},
-	"send_welcome_message": false
+	"send_sms_welcome_message": false
 }'
 
 ```
@@ -702,7 +702,7 @@ id | Member's ID | integer
 
 Parameter | Required? | Default | Description | Type
 --------- | ----------- | ----------- | --------- | -----------
-send_unsubscribe_message | no | true | Should optout message be sent to member? | Boolean
+send_email_unsubscribe_message | no | true | Should optout email be sent to member? | Boolean
 
 ### Response (JSON object)
 
