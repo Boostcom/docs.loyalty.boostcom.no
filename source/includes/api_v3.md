@@ -970,7 +970,8 @@ curl -X PUT \
   -H 'Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522' \
   -d \
   '{
-	  "password": "new_password"
+	  "current_password": "123"
+	  "password": "SuperStrongP4ssw0rd"
   }'
 ```
 
@@ -995,6 +996,7 @@ In opposition to [Me &bull; Update](#v3-me-update), it does not validate current
 Parameter | Description | Type
 --------- | ----------- | ------
 password | Member's new password | string
+current_password | Member's current password | string
 
 ### Error responses
 
@@ -1003,6 +1005,7 @@ Status | Reason
 `404` | Member associated with given Authorization token does not exist
 `422` | Invalid password - returns [validation errors](#validation-on-members) JSON object.
 `460` | Member not authorized (Invalid or expired OAuth token)
+`464` | Invalid current_password
 
 <aside class="notice">
 Requires <code>BL:Api:Members:OAuth:UpdatePassword</code> permit.
