@@ -1507,7 +1507,8 @@ Requires <code>BL:Api:Members:OAuth:Update</code> permit.
   -H <span class="s1">'Authorization: Bearer 8433d608645345a45ce5a0f5ba1225e57546e86ac49e5fec842159dc82218522'</span> <span class="se">\</span>
   -d <span class="se">\</span>
   <span class="s1">'{
-      "password": "new_password"
+      "current_password": "123"
+      "password": "SuperStrongP4ssw0rd"
   }'</span>
 </code></pre>
 <blockquote>
@@ -1539,6 +1540,11 @@ Requires <code>BL:Api:Members:OAuth:Update</code> permit.
 <td>Member&rsquo;s new password</td>
 <td>string</td>
 </tr>
+<tr>
+<td>current_password</td>
+<td>Member&rsquo;s current password</td>
+<td>string</td>
+</tr>
 </tbody></table>
 
 <h3 id="error-responses">Error responses</h3>
@@ -1560,6 +1566,10 @@ Requires <code>BL:Api:Members:OAuth:Update</code> permit.
 <tr>
 <td><code class="prettyprint">460</code></td>
 <td>Member not authorized (Invalid or expired OAuth token)</td>
+</tr>
+<tr>
+<td><code class="prettyprint">464</code></td>
+<td>Invalid current_password</td>
 </tr>
 </tbody></table>
 
