@@ -863,7 +863,7 @@ Requires <code>BL:Api:MemberBulks:CreateOrUpdate</code> permit
 
 <!--- ############################################################################################################# --->
 
-## <a name="v3-members-send-password-reset-link"></a> Members &bull; Send password reset token
+## <a name="v3-members-send-password-reset-token"></a> Members &bull; Send password reset token
 
 > Example:
 
