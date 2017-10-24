@@ -1438,7 +1438,7 @@ Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Tok
 Authentication with <code>X-Member-Token</code> and <code>X-Customer-Private-Token</code>.
 </aside>
 
-          <h1 id="api-v3-reference-work-in-progress">Api V3 reference (work in progress)</h1>
+          <h1 id="api-v3-reference">Api V3 reference</h1>
 
 <h2 id="general-info">General info</h2>
 
@@ -2598,6 +2598,331 @@ Same as welcome messages, optout messages sending also depends on Loyalty Club a
 
 <aside class="notice">
 Requires <code>BL:Api:Members:Destroy</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="member-bulks-create-or-update-async-work-in-progress"><a name="v3-members-bulk-create-or-update"></a> Member Bulks &bull; Create or Update (ASync, work in progress)</h2>
+
+<p><strong>This may change</strong></p>
+
+<p><strong>POST</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/bulks/create_or_update</code></p>
+
+<p>Creates new members or updates existing ones (based on unique identifiers). Job will be done in background.</p>
+
+<p>It is possible to trigger sms and email welcome message by setting <code class="prettyprint">send_sms_welcome_message: true</code> or <code class="prettyprint">send_email_welcome_message: true</code>.
+It will be only send when member is created (nothing will be send to members that are being updated). 
+Welcome messages depends on Loyalty Club and Product configuration.</p>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X POST <span class="se">\</span>
+    <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/bulks/create_or_update"</span> <span class="se">\</span>
+    -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+    -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+    -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+    -H <span class="s1">'X-User-Agent: CURL manual test'</span>
+</code></pre>
+<blockquote>
+<p>When successful, JSON will be returned:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"success"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"job_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"23388281912"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<h3 id="members-array">Members Array</h3>
+
+<p>Requirements:</p>
+
+<ul>
+<li>all members must have unique identifiers (and also email and msisdn)</li>
+<li>maximum number of items in array is 5000</li>
+</ul>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Required?</th>
+<th>Default</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>properties</td>
+<td>yes</td>
+<td>-</td>
+<td>JSON with properties for member (similar as in Members Create endpoint)</td>
+<td>JSON Object</td>
+</tr>
+<tr>
+<td>password</td>
+<td>no</td>
+<td>null</td>
+<td>Member’s password. Not required, but user won’t be able to log in without this</td>
+<td>String</td>
+</tr>
+<tr>
+<td>sms_enabled</td>
+<td>no</td>
+<td>true</td>
+<td>Should SMS channel be enabled for member?</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>email_enabled</td>
+<td>no</td>
+<td>true</td>
+<td>Should email channel be enabled for member?</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>push_enabled</td>
+<td>no</td>
+<td>true</td>
+<td>Should push channel will be enabled for member?</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>source</td>
+<td>no</td>
+<td>&ldquo;Product&rdquo; header</td>
+<td>Source of member. Used only when creating member</td>
+<td>String</td>
+</tr>
+<tr>
+<td>subsource</td>
+<td>no</td>
+<td>&ldquo;Subproduct&rdquo; header</td>
+<td>Subsource of member. Used only when creating member</td>
+<td>String</td>
+</tr>
+</tbody></table>
+
+<h3 id="post-parameters-json">POST Parameters (JSON)</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required?</th>
+<th>Default</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>members</td>
+<td>yes</td>
+<td>-</td>
+<td>Array with members payloads</td>
+<td>Array<JSON Object></td>
+</tr>
+<tr>
+<td>only_create</td>
+<td>no</td>
+<td>false</td>
+<td>Only create members. Don&rsquo;t update existing ones</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>job_id</td>
+<td>no</td>
+<td>auto-generated</td>
+<td>When you&rsquo;re making more than 1 call you can consider adding it. Otherwise it will be auto-generated</td>
+<td>String</td>
+</tr>
+<tr>
+<td>request_number</td>
+<td>no</td>
+<td>auto-generated</td>
+<td>Number of request to identify errors in &ldquo;Status&rdquo; endpoint easier. Useless without specifying <code class="prettyprint">job_id</code></td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>send_sms_welcome_message</td>
+<td>no</td>
+<td>true</td>
+<td>Should SMS welcome message be sent to member?</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>send_email_welcome_message</td>
+<td>no</td>
+<td>true</td>
+<td>Should email welcome be sent to member?</td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+
+<h3 id="response-json-object">Response (JSON object)</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>success</td>
+<td>Job was successfully scheduled</td>
+<td>Boolean</td>
+</tr>
+<tr>
+<td>job_id</td>
+<td>ID for checking batch job status</td>
+<td>String</td>
+</tr>
+</tbody></table>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">422</code></td>
+<td>Most likely you have duplicated identifiers in <code class="prettyprint">members</code> param.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:MemberBulks:CreateOrUpdate</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="member-bulks-create-or-update-status-work-in-progress"><a name="v3-members-bulk-create-or-update-status"></a> Member Bulks &bull; Create or Update Status (work in progress)</h2>
+
+<p><strong>This may change</strong></p>
+
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/bulks/create_or_update/:job_id</code></p>
+
+<p>Returns status about &ldquo;Bulk Create or Update&rdquo; background job.</p>
+
+<p>Access jobs&rsquo; statuses is scoped by client authorization token.</p>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X GET <span class="se">\</span>
+    <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/member_bulks/create_or_update/:job_id"</span> <span class="se">\</span>
+    -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+    -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+    -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+    -H <span class="s1">'X-User-Agent: CURL manual test'</span>
+</code></pre>
+<blockquote>
+<p>When successful, JSON will be returned:</p>
+</blockquote>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>job_id</td>
+<td>ID of bulk job</td>
+</tr>
+</tbody></table>
+
+<h3 id="response-json-object">Response (JSON object)</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>status</td>
+<td>One of: [&lsquo;finished&rsquo;, &lsquo;waiting&rsquo;, &lsquo;in_progress&rsquo;, &lsquo;fatal_error&rsquo;]</td>
+<td>String</td>
+</tr>
+<tr>
+<td>bulk_jobs</td>
+<td>Number of bulk jobs scheduled internally</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>bulk_jobs_done</td>
+<td>Number of bulk jobs already done</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>members_created_number</td>
+<td>Number of members that were successfully created</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>members_updated_number</td>
+<td>Number of members that were successfully updated</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>members_with_validation_errors_number</td>
+<td>Number of members that weren&rsquo;t create nor updated due to validation errors</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>errors</td>
+<td>Array with errors</td>
+<td>Array<JSON Object></td>
+</tr>
+</tbody></table>
+
+<h3 id="errors-json-object">Errors JSON Object</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>request_number</td>
+<td>Number of request specified while making bulk for creating bulk job</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>position</td>
+<td>Member payload position in members&rsquo; array</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>errors</td>
+<td><a href="#validation-on-members">validation errors</a> JSON object.</td>
+<td>JSON Object</td>
+</tr>
+</tbody></table>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">404</code></td>
+<td>Job with such ID wasn&rsquo;t found.</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:MemberBulks:CreateOrUpdate</code> permit
 </aside>
 
 <!--- ############################################################################################################# --->
