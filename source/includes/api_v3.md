@@ -863,12 +863,12 @@ Requires <code>BL:Api:MemberBulks:CreateOrUpdate</code> permit
 
 <!--- ############################################################################################################# --->
 
-## <a name="v3-members-send-password-reset-link"></a> Members &bull; Send password reset link
+## <a name="v3-members-send-password-reset-link"></a> Members &bull; Send password reset token
 
 > Example:
 
 ```shell
-curl "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/send_password_reset_link" \
+curl "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/send_password_reset_token" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
@@ -883,7 +883,7 @@ curl "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_
 }
 ```
 
-**POST** `/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/send_password_reset_link`
+**POST** `/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/send_password_reset_token`
 
 Sends password reset link to given e-mail address if it is associated with member in given loyalty club.
 
