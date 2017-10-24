@@ -2927,12 +2927,12 @@ Requires <code>BL:Api:MemberBulks:CreateOrUpdate</code> permit
 
 <!--- ############################################################################################################# --->
 
-<h2 id="members-send-password-reset-link"><a name="v3-members-send-password-reset-link"></a> Members &bull; Send password reset link</h2>
+<h2 id="members-send-password-reset-token"><a name="v3-members-send-password-reset-token"></a> Members &bull; Send password reset token</h2>
 
 <blockquote>
 <p>Example:</p>
 </blockquote>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/send_password_reset_link"</span> <span class="se">\</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/send_password_reset_token"</span> <span class="se">\</span>
   -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
   -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
   -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
@@ -2945,7 +2945,7 @@ Requires <code>BL:Api:MemberBulks:CreateOrUpdate</code> permit
   </span><span class="err">//</span><span class="w"> </span><span class="err">Empty</span><span class="w"> </span><span class="err">object</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p><strong>POST</strong> <code class="prettyprint">/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/send_password_reset_link</code></p>
+<p><strong>POST</strong> <code class="prettyprint">/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/send_password_reset_token</code></p>
 
 <p>Sends password reset link to given e-mail address if it is associated with member in given loyalty club.</p>
 
