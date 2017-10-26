@@ -2077,12 +2077,12 @@ Requires <code>BL:Api:Schema:Get</code> permit
 
 <!--- ############################################################################################################# --->
 
-<h2 id="members-check-if-exists"><a name="v3-members-check"></a> Members &bull; Check if exists</h2>
+<h2 id="members-get-public-info"><a name="v3-members-public-info"></a> Members &bull; Get public info</h2>
 
 <blockquote>
 <p>Example:</p>
 </blockquote>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/:id/check_existence"</span> <span class="se">\</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/:id/public_info"</span> <span class="se">\</span>
   -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
   -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
   -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
@@ -2092,16 +2092,17 @@ Requires <code>BL:Api:Schema:Get</code> permit
 <p>Returns hash consisting of just one property: :exists</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"exists"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> 
+  </span><span class="s2">"exists"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="s2">"can_login"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> 
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id/check_existence</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id/public_info</code></p>
 
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn/check_existence</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn/public_info</code></p>
 
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/check_existence</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/public_info</code></p>
 
-<p>It can be used to check whether member exists in loyalty club or not.</p>
+<p>Returns basic info for given member.</p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -2135,11 +2136,18 @@ Requires <code>BL:Api:Schema:Get</code> permit
 <tr>
 <th>Key</th>
 <th>Type</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>exists</td>
 <td>boolean</td>
+<td>Does member with this identifier exist in LC?</td>
+</tr>
+<tr>
+<td>can_login</td>
+<td>boolean</td>
+<td>Is this member able to sign?</td>
 </tr>
 </tbody></table>
 
@@ -2602,6 +2610,218 @@ Requires <code>BL:Api:Members:Destroy</code> permit
 
 <!--- ############################################################################################################# --->
 
+<h2 id="members-send-password-reset-token"><a name="v3-members-send-password-reset-token"></a> Members &bull; Send password reset token</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/send_password_reset_token"</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
+</code></pre>
+<blockquote>
+<p>Always returns an empty JSON object</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="err">Empty</span><span class="w"> </span><span class="err">object</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>POST</strong> <code class="prettyprint">/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/send_password_reset_token</code></p>
+
+<p>Sends password reset link to given e-mail address if it is associated with member in given loyalty club.</p>
+
+<p>The e-mail contains a token generated for member, valid for 24 hours.</p>
+
+<p>The token can be then used to reset password with <a href="#v3-members-reset-password">Members &bull; Reset password</a>.
+It also may be verified with <a href="#v3-members-verify-token">Members &bull; Verify token</a></p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>email</td>
+<td>Member&rsquo;s email</td>
+<td>string (email)</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Members:Tokens:Create</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="members-verify-token"><a name="v3-members-verify-token"></a> Members &bull; Verify token</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/verify_token/password_reset/k4wort03j2"</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
+</code></pre>
+<blockquote>
+<p>Example response:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="s2">"valid"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>GET</strong> <code class="prettyprint">/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/verify_token/:type/:token</code></p>
+
+<p>Verifies given member token. Returns response indicating if given token is (still) valid.</p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>email</td>
+<td>Member&rsquo;s email</td>
+<td>string (email)</td>
+</tr>
+<tr>
+<td>type</td>
+<td>Token type</td>
+<td><code class="prettyprint">password_reset</code> (more types in future)</td>
+</tr>
+<tr>
+<td>token</td>
+<td>Token</td>
+<td>string</td>
+</tr>
+</tbody></table>
+
+<h3 id="response-json-object">Response (JSON object)</h3>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>valid</td>
+<td>boolean</td>
+</tr>
+</tbody></table>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">400</code></td>
+<td>Invalid <code class="prettyprint">type</code></td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Members:Tokens:Verify</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
+<h2 id="members-reset-password"><a name="v3-members-reset-password"></a> Members &bull; Reset password</h2>
+
+<blockquote>
+<p>Example:</p>
+</blockquote>
+<pre class="highlight shell tab-shell"><code>curl -X PUT <span class="se">\</span>
+  <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/reset_password"</span> <span class="se">\</span>
+  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
+  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
+  -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
+  -d <span class="se">\</span>
+    <span class="s1">'{
+      "password": "new_password",
+      "token": "k4wort03j2"
+    }'</span>
+</code></pre>
+<blockquote>
+<p>When successful, returns an empty object:</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="err">Empty</span><span class="w"> </span><span class="err">object</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+<p><strong>PUT</strong> <code class="prettyprint">/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/reset_password</code></p>
+
+<p>Updates given member password with if token is valid.</p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Type</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>password</td>
+<td>Member&rsquo;s new password</td>
+<td>string</td>
+</tr>
+<tr>
+<td>token</td>
+<td>Confirmation token generated and sent with <a href="#v3-members-send-password-reset-link">Members &bull; Send password reset link</a></td>
+<td>string</td>
+</tr>
+</tbody></table>
+
+<h3 id="error-responses">Error responses</h3>
+
+<table><thead>
+<tr>
+<th>Status</th>
+<th>Reason</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">400</code></td>
+<td><code class="prettyprint">password</code> or <code class="prettyprint">token</code> param is missing</td>
+</tr>
+<tr>
+<td><code class="prettyprint">404</code></td>
+<td>Member could not be found</td>
+</tr>
+<tr>
+<td><code class="prettyprint">422</code></td>
+<td>Invalid password - returns <a href="#validation-on-members">validation errors</a> JSON object.</td>
+</tr>
+<tr>
+<td><code class="prettyprint">463</code></td>
+<td>Invalid confirmation token</td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+Requires <code>BL:Api:Members:ResetPassword</code> permit
+</aside>
+
+<!--- ############################################################################################################# --->
+
 <h2 id="member-bulks-create-or-update-async-work-in-progress"><a name="v3-members-bulk-create-or-update"></a> Member Bulks &bull; Create or Update (ASync, work in progress)</h2>
 
 <p><strong>This may change</strong></p>
@@ -2923,218 +3143,6 @@ Requires <code>BL:Api:MemberBulks:CreateOrUpdate</code> permit
 
 <aside class="notice">
 Requires <code>BL:Api:MemberBulks:CreateOrUpdate</code> permit
-</aside>
-
-<!--- ############################################################################################################# --->
-
-<h2 id="members-send-password-reset-token"><a name="v3-members-send-password-reset-token"></a> Members &bull; Send password reset token</h2>
-
-<blockquote>
-<p>Example:</p>
-</blockquote>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/send_password_reset_token"</span> <span class="se">\</span>
-  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
-  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
-</code></pre>
-<blockquote>
-<p>Always returns an empty JSON object</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="err">//</span><span class="w"> </span><span class="err">Empty</span><span class="w"> </span><span class="err">object</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p><strong>POST</strong> <code class="prettyprint">/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/send_password_reset_token</code></p>
-
-<p>Sends password reset link to given e-mail address if it is associated with member in given loyalty club.</p>
-
-<p>The e-mail contains a token generated for member, valid for 24 hours.</p>
-
-<p>The token can be then used to reset password with <a href="#v3-members-reset-password">Members &bull; Reset password</a>.
-It also may be verified with <a href="#v3-members-verify-token">Members &bull; Verify token</a></p>
-
-<h3 id="url-parameters">URL Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-<th>Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>email</td>
-<td>Member&rsquo;s email</td>
-<td>string (email)</td>
-</tr>
-</tbody></table>
-
-<aside class="notice">
-Requires <code>BL:Api:Members:Tokens:Create</code> permit
-</aside>
-
-<!--- ############################################################################################################# --->
-
-<h2 id="members-verify-token"><a name="v3-members-verify-token"></a> Members &bull; Verify token</h2>
-
-<blockquote>
-<p>Example:</p>
-</blockquote>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/by_email/joe@example.com/verify_token/password_reset/k4wort03j2"</span> <span class="se">\</span>
-  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
-  -H <span class="s1">'X-User-Agent: CURL manual test'</span>
-</code></pre>
-<blockquote>
-<p>Example response:</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"valid"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p><strong>GET</strong> <code class="prettyprint">/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/verify_token/:type/:token</code></p>
-
-<p>Verifies given member token. Returns response indicating if given token is (still) valid.</p>
-
-<h3 id="url-parameters">URL Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-<th>Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>email</td>
-<td>Member&rsquo;s email</td>
-<td>string (email)</td>
-</tr>
-<tr>
-<td>type</td>
-<td>Token type</td>
-<td><code class="prettyprint">password_reset</code> (more types in future)</td>
-</tr>
-<tr>
-<td>token</td>
-<td>Token</td>
-<td>string</td>
-</tr>
-</tbody></table>
-
-<h3 id="response-json-object">Response (JSON object)</h3>
-
-<table><thead>
-<tr>
-<th>Key</th>
-<th>Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>valid</td>
-<td>boolean</td>
-</tr>
-</tbody></table>
-
-<h3 id="error-responses">Error responses</h3>
-
-<table><thead>
-<tr>
-<th>Status</th>
-<th>Reason</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code class="prettyprint">400</code></td>
-<td>Invalid <code class="prettyprint">type</code></td>
-</tr>
-</tbody></table>
-
-<aside class="notice">
-Requires <code>BL:Api:Members:Tokens:Verify</code> permit
-</aside>
-
-<!--- ############################################################################################################# --->
-
-<h2 id="members-reset-password"><a name="v3-members-reset-password"></a> Members &bull; Reset password</h2>
-
-<blockquote>
-<p>Example:</p>
-</blockquote>
-<pre class="highlight shell tab-shell"><code>curl -X PUT <span class="se">\</span>
-  <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/reset_password"</span> <span class="se">\</span>
-  -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
-  -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
-  -H <span class="s1">'X-User-Agent: CURL manual test'</span> <span class="se">\</span>
-  -d <span class="se">\</span>
-    <span class="s1">'{
-      "password": "new_password",
-      "token": "k4wort03j2"
-    }'</span>
-</code></pre>
-<blockquote>
-<p>When successful, returns an empty object:</p>
-</blockquote>
-<pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="err">//</span><span class="w"> </span><span class="err">Empty</span><span class="w"> </span><span class="err">object</span><span class="w">
-</span><span class="p">}</span><span class="w">
-</span></code></pre>
-<p><strong>PUT</strong> <code class="prettyprint">/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/reset_password</code></p>
-
-<p>Updates given member password with if token is valid.</p>
-
-<h3 id="url-parameters">URL Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Description</th>
-<th>Type</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>password</td>
-<td>Member&rsquo;s new password</td>
-<td>string</td>
-</tr>
-<tr>
-<td>token</td>
-<td>Confirmation token generated and sent with <a href="#v3-members-send-password-reset-link">Members &bull; Send password reset link</a></td>
-<td>string</td>
-</tr>
-</tbody></table>
-
-<h3 id="error-responses">Error responses</h3>
-
-<table><thead>
-<tr>
-<th>Status</th>
-<th>Reason</th>
-</tr>
-</thead><tbody>
-<tr>
-<td><code class="prettyprint">400</code></td>
-<td><code class="prettyprint">password</code> or <code class="prettyprint">token</code> param is missing</td>
-</tr>
-<tr>
-<td><code class="prettyprint">404</code></td>
-<td>Member could not be found</td>
-</tr>
-<tr>
-<td><code class="prettyprint">422</code></td>
-<td>Invalid password - returns <a href="#validation-on-members">validation errors</a> JSON object.</td>
-</tr>
-<tr>
-<td><code class="prettyprint">463</code></td>
-<td>Invalid confirmation token</td>
-</tr>
-</tbody></table>
-
-<aside class="notice">
-Requires <code>BL:Api:Members:ResetPassword</code> permit
 </aside>
 
 <!--- ############################################################################################################# --->
