@@ -1,5 +1,15 @@
 # Api V3 reference
 
+## Changelog
+
+#### 27.10.2017: 
+
+* Rename `/check_exsistance` endpoints to `/public_info`
+* Add :can_login attribute to `/public_info` response
+* Remove :exists attribute from `/public_info` response and make it to return nil when member does not exist
+* Add `PUT /api/v3/loyalty_clubs/:loyalty_club_slug/members/emails/:email/verify`
+* Add `PUT /api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/unsubscribe`
+
 ## General info
 
 **This is only draft!**
@@ -415,33 +425,41 @@ Requires <code>BL:Api:Schema:Get</code> permit
 
 <!--- ############################################################################################################# --->
 
-## <a name="v3-members-check"></a> Members &bull; Check if exists
+## <a name="v3-members-public-info"></a> Members &bull; Get public info
 
 > Example:
 
 ```shell
-curl "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/:id/check_existence" \
+curl "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/:id/public_info" \
   -H 'Content-Type: application/json' \
   -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
   -H 'X-Product-Name: default' \
   -H 'X-User-Agent: CURL manual test'
 ```
 
-> Returns hash consisting of just one property: :exists
+> Returns hash structured like this:
 
 ```json
 {
-  "exists": true 
+  "exists": true, 
+  "can_login": true 
 }
 ```
 
-**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:id/check_existence`
+> When member does not exist, it returns null.
 
-**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn/check_existence`
+```json
+null
+```
 
-**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/check_existence`
+**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/:id/public_info`
 
-It can be used to check whether member exists in loyalty club or not.
+**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn/public_info`
+
+**GET** `api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/public_info`
+
+Returns basic info for given member. If member does not exist, returns `null'.
+
 
 ### URL Parameters
 
@@ -453,9 +471,10 @@ email | Member's email | string (email)
 
 ### Response (JSON object)
 
-Key | Type
---------- | ---------
-exists | boolean
+Key | Type | Description
+--------- | --------- | ---------
+exists | boolean | Does member with given identifier exist in given Loyalty Club? 
+can_login | boolean | Is this member able to sign? 
 
 <aside class="notice">
 Requires <code>BL:Api:Members:Check</code> permit
@@ -861,6 +880,121 @@ Status | Reason
 <aside class="notice">
 Requires <code>BL:Api:Members:ResetPassword</code> permit
 </aside>
+
+<!--- ############################################################################################################# --->
+
+<!---
+
+## <a name="v3-members-unsubscribe"></a> Members &bull; Unsubscribe
+
+> Example:
+
+```shell
+curl -X PUT \
+  "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/unsubscribe" \
+  -H 'Content-Type: application/json' \
+  -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
+  -H 'X-Product-Name: default' \
+  -H 'X-User-Agent: CURL manual test' \
+  -d '{
+      "token": "36c636e4290d28488a13691afce351397bec21b1246c2c7896a8262d9bfbc4c4" 
+    }'
+```
+
+> When successful, returns an empty object:
+
+```json
+{
+  // Empty object
+}
+```
+
+**PUT** `/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/unsubscribe`
+
+Unsubscribes member by given e-mail.
+
+### URL Parameters
+
+Parameter | Description | Type
+--------- | ----------- | ------
+email | Member's email | string
+
+### POST Parameters (JSON)
+
+Parameter | Description | Type
+--------- | --------- | -----------
+token | Unsubscription token | string
+
+### Error responses
+
+Status | Reason
+--------- | ----------- 
+`404` | Member could not be found
+`400` | Unsubscription token missing
+`463` | Invalid unsubscription token
+
+<aside class="notice">
+Requires <code>BL:Api:Members:Verify</code> permit
+</aside>
+-->
+
+<!--- ############################################################################################################# --->
+
+<!---
+
+## <a name="v3-members-emails-verify"></a> Member Emails &bull; Verify
+
+> Example:
+
+```shell
+curl -X PUT \
+  "https://bpc-api.boostcom.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/emails/:email/verify" \
+  -H 'Content-Type: application/json' \
+  -H 'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM' \
+  -H 'X-Product-Name: default' \
+  -H 'X-User-Agent: CURL manual test' \
+  -d '{
+      "token": "36c636e4290d28488a13691afce351397bec21b1246c2c7896a8262d9bfbc4c4" 
+    }'
+```
+
+> When successful, returns an empty object:
+
+```json
+{
+  // Empty object
+}
+```
+
+**PUT** `/api/v3/loyalty_clubs/:loyalty_club_slug/members/emails/:email/verify`
+
+Verifies given member e-mail status.
+
+### URL Parameters
+
+Parameter | Description | Type
+--------- | ----------- | ------
+email | Member's email to confirm | string
+
+### POST Parameters (JSON)
+
+Parameter | Description | Type
+--------- | --------- | -----------
+token | Verification token generated and sent on member creation | string
+
+### Error responses
+
+Status | Reason
+--------- | ----------- 
+`404` | Member could not be found
+`400` | Member token missing
+`463` | Invalid member token
+
+<aside class="notice">
+Requires <code>BL:Api:Members:Emails:Verify</code> permit
+</aside>
+
+-->
 
 <!--- ############################################################################################################# --->
 
