@@ -1,5 +1,15 @@
 <h1 id="api-v3-reference">Api V3 reference</h1>
 
+<h2 id="changelog">Changelog</h2>
+
+<h4 id="27-10-2017">27.10.2017:</h4>
+
+<ul>
+<li>Rename <code class="prettyprint">/check_exsistance</code> endpoints to <code class="prettyprint">/public_info</code></li>
+<li>Add :can_login attribute to <code class="prettyprint">/public_info</code> response</li>
+<li>Remove :exists attribute from <code class="prettyprint">/public_info</code> response and make it to return nil when member does not exist</li>
+</ul>
+
 <h2 id="general-info">General info</h2>
 
 <p><strong>This is only draft!</strong></p>
@@ -649,12 +659,16 @@ Requires <code>BL:Api:Schema:Get</code> permit
   -H <span class="s1">'X-User-Agent: CURL manual test'</span>
 </code></pre>
 <blockquote>
-<p>Returns hash consisting of just one property: :exists</p>
+<p>When member exists, it returns hash consisting of just one property: :can_login</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"exists"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-  </span><span class="s2">"can_login"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> 
+  </span><span class="s2">"can_login"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> 
 </span><span class="p">}</span><span class="w">
+</span></code></pre>
+<blockquote>
+<p>When member does not exist, it returns null.</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="kc">null</span><span class="w">
 </span></code></pre>
 <p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id/public_info</code></p>
 
@@ -662,7 +676,7 @@ Requires <code>BL:Api:Schema:Get</code> permit
 
 <p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/public_info</code></p>
 
-<p>Returns basic info for given member.</p>
+<p>Returns basic info for given member. If member does not exist, returns `null&rsquo;.</p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -699,11 +713,6 @@ Requires <code>BL:Api:Schema:Get</code> permit
 <th>Description</th>
 </tr>
 </thead><tbody>
-<tr>
-<td>exists</td>
-<td>boolean</td>
-<td>Does member with this identifier exist in LC?</td>
-</tr>
 <tr>
 <td>can_login</td>
 <td>boolean</td>
