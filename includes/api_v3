@@ -1,5 +1,17 @@
 <h1 id="api-v3-reference">Api V3 reference</h1>
 
+<h2 id="changelog">Changelog</h2>
+
+<h4 id="27-10-2017">27.10.2017:</h4>
+
+<ul>
+<li>Rename <code class="prettyprint">/check_exsistance</code> endpoints to <code class="prettyprint">/public_info</code></li>
+<li>Add :can_login attribute to <code class="prettyprint">/public_info</code> response</li>
+<li>Remove :exists attribute from <code class="prettyprint">/public_info</code> response and make it to return nil when member does not exist</li>
+<li>Add <code class="prettyprint">PUT /api/v3/loyalty_clubs/:loyalty_club_slug/members/emails/:email/verify</code></li>
+<li>Add <code class="prettyprint">PUT /api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/unsubscribe</code></li>
+</ul>
+
 <h2 id="general-info">General info</h2>
 
 <p><strong>This is only draft!</strong></p>
@@ -637,31 +649,37 @@ Requires <code>BL:Api:Schema:Get</code> permit
 
 <!--- ############################################################################################################# --->
 
-<h2 id="members-check-if-exists"><a name="v3-members-check"></a> Members &bull; Check if exists</h2>
+<h2 id="members-get-public-info"><a name="v3-members-public-info"></a> Members &bull; Get public info</h2>
 
 <blockquote>
 <p>Example:</p>
 </blockquote>
-<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/:id/check_existence"</span> <span class="se">\</span>
+<pre class="highlight shell tab-shell"><code>curl <span class="s2">"https://bpc-api.boostcom.no/api/v3/loyalty_clubs/infinity-mall/members/:id/public_info"</span> <span class="se">\</span>
   -H <span class="s1">'Content-Type: application/json'</span> <span class="se">\</span>
   -H <span class="s1">'X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM'</span> <span class="se">\</span>
   -H <span class="s1">'X-Product-Name: default'</span> <span class="se">\</span>
   -H <span class="s1">'X-User-Agent: CURL manual test'</span>
 </code></pre>
 <blockquote>
-<p>Returns hash consisting of just one property: :exists</p>
+<p>Returns hash structured like this:</p>
 </blockquote>
 <pre class="highlight json tab-json"><code><span class="p">{</span><span class="w">
-  </span><span class="s2">"exists"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> 
+  </span><span class="s2">"exists"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> 
+  </span><span class="s2">"can_login"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> 
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id/check_existence</code></p>
+<blockquote>
+<p>When member does not exist, it returns null.</p>
+</blockquote>
+<pre class="highlight json tab-json"><code><span class="kc">null</span><span class="w">
+</span></code></pre>
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/:id/public_info</code></p>
 
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn/check_existence</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_msisdn/:msisdn/public_info</code></p>
 
-<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/check_existence</code></p>
+<p><strong>GET</strong> <code class="prettyprint">api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/public_info</code></p>
 
-<p>It can be used to check whether member exists in loyalty club or not.</p>
+<p>Returns basic info for given member. If member does not exist, returns `null&rsquo;.</p>
 
 <h3 id="url-parameters">URL Parameters</h3>
 
@@ -695,11 +713,18 @@ Requires <code>BL:Api:Schema:Get</code> permit
 <tr>
 <th>Key</th>
 <th>Type</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
 <td>exists</td>
 <td>boolean</td>
+<td>Does member with given identifier exist in given Loyalty Club?</td>
+</tr>
+<tr>
+<td>can_login</td>
+<td>boolean</td>
+<td>Is this member able to sign?</td>
 </tr>
 </tbody></table>
 
@@ -1374,6 +1399,121 @@ Requires <code>BL:Api:Members:ResetPassword</code> permit
 
 <!--- ############################################################################################################# --->
 
+<!---
+
+## <a name="v3-members-unsubscribe"></a> Members &bull; Unsubscribe
+
+> Example:
+
+&ldquo;`shell
+curl -X PUT \
+  &quot;https://bpc-api.boostcom.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/unsubscribe&rdquo; \
+  -H &lsquo;Content-Type: application/json&rsquo; \
+  -H &lsquo;X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM&rsquo; \
+  -H &lsquo;X-Product-Name: default&rsquo; \
+  -H &lsquo;X-User-Agent: CURL manual test&rsquo; \
+  -d &lsquo;{
+      &ldquo;token&rdquo;: &ldquo;36c636e4290d28488a13691afce351397bec21b1246c2c7896a8262d9bfbc4c4&rdquo; 
+    }&rsquo;
+&ldquo;`
+
+> When successful, returns an empty object:
+
+&rdquo;`json
+{
+  // Empty object
+}
+&ldquo;`
+
+**PUT** `/api/v3/loyalty_clubs/:loyalty_club_slug/members/by_email/:email/unsubscribe`
+
+Unsubscribes member by given e-mail.
+
+### URL Parameters
+
+Parameter | Description | Type
+&mdash;&mdash;&mdash; | &mdash;&mdash;&mdash;&ndash; | &mdash;&mdash;
+email | Member&rsquo;s email | string
+
+### POST Parameters (JSON)
+
+Parameter | Description | Type
+&mdash;&mdash;&mdash; | &mdash;&mdash;&mdash; | &mdash;&mdash;&mdash;&ndash;
+token | Unsubscription token | string
+
+### Error responses
+
+Status | Reason
+&mdash;&mdash;&mdash; | &mdash;&mdash;&mdash;&ndash; 
+`404` | Member could not be found
+`400` | Unsubscription token missing
+`463` | Invalid unsubscription token
+
+<aside class="notice">
+Requires <code>BL:Api:Members:Verify</code> permit
+</aside>
+&ndash;>
+
+<!--- ############################################################################################################# --->
+
+<!---
+
+## <a name="v3-members-emails-verify"></a> Member Emails &bull; Verify
+
+> Example:
+
+&rdquo;`shell
+curl -X PUT \
+  &ldquo;https://bpc-api.boostcom.no/api/v3/loyalty_clubs/:loyalty_club_slug/members/emails/:email/verify&rdquo; \
+  -H &lsquo;Content-Type: application/json&rsquo; \
+  -H &lsquo;X-Client-Authorization: B7t9U9tsoWsGhrv2ouUoSqpM&rsquo; \
+  -H &lsquo;X-Product-Name: default&rsquo; \
+  -H &lsquo;X-User-Agent: CURL manual test&rsquo; \
+  -d &lsquo;{
+      &ldquo;token&rdquo;: &ldquo;36c636e4290d28488a13691afce351397bec21b1246c2c7896a8262d9bfbc4c4&rdquo; 
+    }&rsquo;
+&ldquo;`
+
+> When successful, returns an empty object:
+
+&rdquo;`json
+{
+  // Empty object
+}
+&ldquo;`
+
+**PUT** `/api/v3/loyalty_clubs/:loyalty_club_slug/members/emails/:email/verify`
+
+Verifies given member e-mail status.
+
+### URL Parameters
+
+Parameter | Description | Type
+&mdash;&mdash;&mdash; | &mdash;&mdash;&mdash;&ndash; | &mdash;&mdash;
+email | Member&rsquo;s email to confirm | string
+
+### POST Parameters (JSON)
+
+Parameter | Description | Type
+&mdash;&mdash;&mdash; | &mdash;&mdash;&mdash; | &mdash;&mdash;&mdash;&ndash;
+token | Verification token generated and sent on member creation | string
+
+### Error responses
+
+Status | Reason
+&mdash;&mdash;&mdash; | &mdash;&mdash;&mdash;&ndash; 
+`404` | Member could not be found
+`400` | Member token missing
+`463` | Invalid member token
+
+<aside class="notice">
+Requires <code>BL:Api:Members:Emails:Verify</code> permit
+</aside>
+
+&ndash;>
+
+<!--- ############################################################################################################# --->
+
 <h2 id="member-bulks-create-or-update-async-work-in-progress"><a name="v3-members-bulk-create-or-update"></a> Member Bulks &bull; Create or Update (ASync, work in progress)</h2>
 
 <p><strong>This may change</strong></p>
@@ -1460,7 +1600,7 @@ Welcome messages depends on Loyalty Club and Product configuration.</p>
 <tr>
 <td>source</td>
 <td>no</td>
-<td>&ldquo;Product&rdquo; header</td>
+<td>&quot;Product&rdquo; header</td>
 <td>Source of member. Used only when creating member</td>
 <td>String</td>
 </tr>
