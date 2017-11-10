@@ -10,7 +10,6 @@ toc_footers:
 includes:
   - api_v2
   - api_v1
-  - api_v3
 
 search: true
 ---
